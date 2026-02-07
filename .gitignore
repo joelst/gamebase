@@ -6,3 +6,5 @@
 **/obj/Release
 .vscode
 .vs
+src/GBToolbox/obj
+src/GameBase/obj
