@@ -1390,7 +1390,7 @@ namespace Gemus
         ReplaceEnvironmentVars(ref args, true, false);
         if (_useShort)
         {
-          file = file;
+          file = ProcessHelper.GetShortPath(file);
         }
 
         _funcs.GetFileAndPath(file, out string path, out string filenameOnly);
@@ -2760,7 +2760,6 @@ namespace Gemus
     private void GetScriptFunctionsToProcess(int startLine, out int nextLine, int level, bool process)
     {
       bool doneIf = false;
-      bool doneElse = false;
       bool blockDone = false;
 
       int lineIdx = startLine;
@@ -2812,7 +2811,6 @@ namespace Gemus
           if (doneIf)
           {
             doneIf = false;
-            doneElse = false;
             blockDone = false;
           }
           else

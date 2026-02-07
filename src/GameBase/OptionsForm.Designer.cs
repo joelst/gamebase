@@ -48,26 +48,26 @@ namespace GameBase
       btnSave = new System.Windows.Forms.Button();
       btnCancel = new System.Windows.Forms.Button();
       SuspendLayout();
-      // 
+      //
       // lblBasePath
-      // 
+      //
       lblBasePath.AutoSize = true;
       lblBasePath.Location = new System.Drawing.Point(12, 15);
       lblBasePath.Name = "lblBasePath";
       lblBasePath.Size = new System.Drawing.Size(97, 15);
       lblBasePath.TabIndex = 0;
       lblBasePath.Text = "GameBase Root:";
-      // 
+      //
       // txtBasePath
-      // 
+      //
       txtBasePath.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
       txtBasePath.Location = new System.Drawing.Point(115, 12);
       txtBasePath.Name = "txtBasePath";
       txtBasePath.Size = new System.Drawing.Size(328, 23);
       txtBasePath.TabIndex = 1;
-      // 
+      //
       // btnBrowse
-      // 
+      //
       btnBrowse.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
       btnBrowse.Location = new System.Drawing.Point(449, 11);
       btnBrowse.Name = "btnBrowse";
@@ -76,35 +76,35 @@ namespace GameBase
       btnBrowse.Text = "Browse...";
       btnBrowse.UseVisualStyleBackColor = true;
       btnBrowse.Click += btnBrowse_Click;
-      // 
+      //
       // lblGbName
-      // 
+      //
       lblGbName.AutoSize = true;
       lblGbName.Location = new System.Drawing.Point(12, 52);
       lblGbName.Name = "lblGbName";
       lblGbName.Size = new System.Drawing.Size(61, 15);
       lblGbName.TabIndex = 3;
       lblGbName.Text = "GB Name:";
-      // 
+      //
       // txtGbName
-      // 
+      //
       txtGbName.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
       txtGbName.Location = new System.Drawing.Point(115, 49);
       txtGbName.Name = "txtGbName";
       txtGbName.Size = new System.Drawing.Size(328, 23);
       txtGbName.TabIndex = 4;
-      // 
+      //
       // lblBackend
-      // 
+      //
       lblBackend.AutoSize = true;
       lblBackend.Location = new System.Drawing.Point(12, 90);
       lblBackend.Name = "lblBackend";
       lblBackend.Size = new System.Drawing.Size(90, 15);
       lblBackend.TabIndex = 5;
       lblBackend.Text = "Archive backend";
-      // 
+      //
       // cmbBackend
-      // 
+      //
       cmbBackend.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
       cmbBackend.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       cmbBackend.FormattingEnabled = true;
@@ -112,9 +112,9 @@ namespace GameBase
       cmbBackend.Name = "cmbBackend";
       cmbBackend.Size = new System.Drawing.Size(328, 23);
       cmbBackend.TabIndex = 6;
-      // 
+      //
       // btnSave
-      // 
+      //
       btnSave.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
       btnSave.Location = new System.Drawing.Point(368, 139);
       btnSave.Name = "btnSave";
@@ -123,9 +123,9 @@ namespace GameBase
       btnSave.Text = "Save";
       btnSave.UseVisualStyleBackColor = true;
       btnSave.Click += btnSave_Click;
-      // 
+      //
       // btnCancel
-      // 
+      //
       btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
       btnCancel.Location = new System.Drawing.Point(449, 139);
       btnCancel.Name = "btnCancel";
@@ -134,9 +134,9 @@ namespace GameBase
       btnCancel.Text = "Cancel";
       btnCancel.UseVisualStyleBackColor = true;
       btnCancel.Click += btnCancel_Click;
-      // 
+      //
       // OptionsForm
-      // 
+      //
       AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       ClientSize = new System.Drawing.Size(536, 174);

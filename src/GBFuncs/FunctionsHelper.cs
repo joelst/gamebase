@@ -41,8 +41,8 @@ namespace GBFuncs
     [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
     private static extern int WritePrivateProfileString(
         string lpAppName,
-        string lpKeyName,
-        string lpString,
+        string? lpKeyName,
+        string? lpString,
         string lpFileName);
 
     /// <summary>

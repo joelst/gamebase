@@ -57,7 +57,9 @@ namespace GameBase
       {
         string gemusIni = GetGemusIniPath();
         Directory.CreateDirectory(Path.GetDirectoryName(gemusIni)!);
-        var backend = (ArchiveBackend)cmbBackend.SelectedItem;
+        var backend = ArchiveUnpacker.GetDefaultBackend();
+        if (cmbBackend.SelectedItem is ArchiveBackend selected)
+          backend = selected;
         GemusIniHelper.WriteIniValue("Settings", "ArchiveBackend", backend.ToString(), gemusIni);
         MessageBox.Show(this, $"Saved backend {backend} to {gemusIni}", "Options", MessageBoxButtons.OK, MessageBoxIcon.Information);
       }

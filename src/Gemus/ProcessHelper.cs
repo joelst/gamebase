@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Text;
 
 namespace Gemus
 {
@@ -20,6 +21,9 @@ namespace Gemus
     [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
     private static extern uint GetDriveType(string lpRootPathName);
 
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    private static extern uint GetShortPathName(string lpszLongPath, StringBuilder lpszShortPath, uint cchBuffer);
+
     private const uint DRIVE_REMOVABLE = 2;
     private const uint DRIVE_FIXED = 3;
     private const uint DRIVE_REMOTE = 4;
@@ -29,6 +33,25 @@ namespace Gemus
     /// <summary>
     /// Determines the type of drive for the given root path.
     /// </summary>
+    public static string GetShortPath(string path)
+    {
+      if (string.IsNullOrWhiteSpace(path))
+        return path;
+
+      var sb = new StringBuilder(path.Length + 1);
+      uint len = GetShortPathName(path, sb, (uint)sb.Capacity);
+      if (len == 0)
+        return path;
+      if (len > sb.Capacity)
+      {
+        sb.Capacity = (int)len;
+        len = GetShortPathName(path, sb, (uint)sb.Capacity);
+        if (len == 0)
+          return path;
+      }
+      return sb.ToString(0, (int)len);
+    }
+
     public static PathLocationType GetDriveLocationType(string rootPath)
     {
       if (string.IsNullOrEmpty(rootPath) || rootPath.Length < 2)

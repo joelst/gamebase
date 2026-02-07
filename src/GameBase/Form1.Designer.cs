@@ -32,9 +32,9 @@ partial class Form1
     {
         btnOptions = new Button();
         SuspendLayout();
-        // 
+        //
         // btnOptions
-        // 
+        //
         btnOptions.Location = new Point(12, 12);
         btnOptions.Name = "btnOptions";
         btnOptions.Size = new Size(120, 23);
@@ -42,9 +42,9 @@ partial class Form1
         btnOptions.Text = "Options";
         btnOptions.UseVisualStyleBackColor = true;
         btnOptions.Click += btnOptions_Click;
-        // 
+        //
         // Form1
-        // 
+        //
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(800, 450);
