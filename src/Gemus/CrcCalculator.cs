@@ -4,8 +4,6 @@
 // Converted from VB6 clsCRC (which used inline x86 assembly)
 // Replaced with pure managed .NET CRC32 implementation
 
-using System.IO.Hashing;
-
 namespace Gemus
 {
   /// <summary>

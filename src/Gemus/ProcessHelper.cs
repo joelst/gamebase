@@ -3,6 +3,7 @@
 // Gemus: Process management helper using Win32 APIs
 // Converted from clsGemus process-related API declarations and methods
 
+using Gemus.Models;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\git\\gamebase\\src\\GBSql\\GBSql.csproj": {}
+    "f:\\git\\gamebase\\src\\GBSql\\GBSql.csproj": {}
   },
   "projects": {
-    "F:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj": {
+    "f:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj",
+        "projectUniqueName": "f:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj",
         "projectName": "GBFuncs",
-        "projectPath": "F:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj",
+        "projectPath": "f:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj",
         "packagesPath": "C:\\Users\\joels\\.nuget\\packages\\",
-        "outputPath": "F:\\git\\gamebase\\src\\GBFuncs\\obj\\",
+        "outputPath": "f:\\git\\gamebase\\src\\GBFuncs\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "F:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -70,14 +70,14 @@
         }
       }
     },
-    "F:\\git\\gamebase\\src\\GBSql\\GBSql.csproj": {
+    "f:\\git\\gamebase\\src\\GBSql\\GBSql.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\git\\gamebase\\src\\GBSql\\GBSql.csproj",
+        "projectUniqueName": "f:\\git\\gamebase\\src\\GBSql\\GBSql.csproj",
         "projectName": "GBSql",
-        "projectPath": "F:\\git\\gamebase\\src\\GBSql\\GBSql.csproj",
+        "projectPath": "f:\\git\\gamebase\\src\\GBSql\\GBSql.csproj",
         "packagesPath": "C:\\Users\\joels\\.nuget\\packages\\",
-        "outputPath": "F:\\git\\gamebase\\src\\GBSql\\obj\\",
+        "outputPath": "f:\\git\\gamebase\\src\\GBSql\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "F:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -99,8 +99,8 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "F:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj": {
-                "projectPath": "F:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj"
+              "f:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj": {
+                "projectPath": "f:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj"
               }
             }
           }

@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "38gFFumbOW8=",
+  "dgSpecHash": "ELAtNUSQGgM=",
   "success": true,
   "projectFilePath": "f:\\git\\gamebase\\src\\Gemus\\Gemus.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\joels\\.nuget\\packages\\sharpcompress\\0.44.5\\sharpcompress.0.44.5.nupkg.sha512"
+  ],
   "logs": []
 }

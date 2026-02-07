@@ -2209,6 +2209,7 @@ namespace Gemus
 
     private string Validate_RUN_EMULATOR(ref string line, out bool dosClose)
     {
+      dosClose = false;
       string error = GetScriptFunctionArgs(12, line, out List<string> args, 0);
       if (string.IsNullOrEmpty(error))
       {
@@ -2237,6 +2238,9 @@ namespace Gemus
 
     private string Validate_RUN_EMULATOR_SEND_KEYS(ref string line, out string sendKeys, out string keyDownDuration, out bool dosClose)
     {
+      sendKeys = string.Empty;
+      keyDownDuration = string.Empty;
+      dosClose = false;
       string error = GetScriptFunctionArgs(22, line, out List<string> args, 2);
       if (!string.IsNullOrEmpty(error))
       {
@@ -2256,6 +2260,7 @@ namespace Gemus
 
     private string Validate_RUN_GAMEFILE(ref string line, out bool dosClose)
     {
+      dosClose = false;
       string error = GetScriptFunctionArgs(12, line, out List<string> args, 0);
       if (string.IsNullOrEmpty(error))
       {
@@ -2284,6 +2289,10 @@ namespace Gemus
 
     private string Validate_RUN_PROGRAM(ref string line, out int fileNum, out string clp, out bool wait, out string filename)
     {
+      fileNum = 0;
+      clp = string.Empty;
+      wait = false;
+      filename = string.Empty;
       string error = GetScriptFunctionArgs(11, line, out List<string> args, 3);
       if (!string.IsNullOrEmpty(error))
       {
@@ -2311,6 +2320,11 @@ namespace Gemus
 
     private string Validate_SET_INI_VALUE(ref string line, out int fileNum, out string section, out string key, out string value, out string filename)
     {
+      fileNum = 0;
+      section = string.Empty;
+      key = string.Empty;
+      value = string.Empty;
+      filename = string.Empty;
       string error = GetScriptFunctionArgs(13, line, out List<string> args, 4);
       if (!string.IsNullOrEmpty(error))
       {
@@ -2341,6 +2355,11 @@ namespace Gemus
 
     private string Validate_SET_CFG_ITEM(ref string line, out int fileNum, out string key, out string delim, out string value, out string filename)
     {
+      fileNum = 0;
+      key = string.Empty;
+      delim = string.Empty;
+      value = string.Empty;
+      filename = string.Empty;
       string error = GetScriptFunctionArgs(12, line, out List<string> args, 4);
       if (!string.IsNullOrEmpty(error))
       {
@@ -2369,6 +2388,10 @@ namespace Gemus
 
     private string Validate_SET_CFG_VALUE(ref string line, out int fileNum, out string key, out string value, out string filename)
     {
+      fileNum = 0;
+      key = string.Empty;
+      value = string.Empty;
+      filename = string.Empty;
       string error = GetScriptFunctionArgs(13, line, out List<string> args, 3);
       if (!string.IsNullOrEmpty(error))
       {
@@ -2396,6 +2419,7 @@ namespace Gemus
 
     private string Validate_SHOW_MESSAGE(ref string line, out string message)
     {
+      message = string.Empty;
       string error = GetScriptFunctionArgs(12, line, out List<string> args, 1);
       if (!string.IsNullOrEmpty(error))
       {
@@ -2410,6 +2434,7 @@ namespace Gemus
 
     private string Validate_EDIT_CLP(ref string line, out string message)
     {
+      message = string.Empty;
       string error = GetScriptFunctionArgs(8, line, out List<string> args, 1);
       if (!string.IsNullOrEmpty(error))
       {
@@ -2434,6 +2459,7 @@ namespace Gemus
 
     private string Validate_WAIT(ref string line, out string ms)
     {
+      ms = string.Empty;
       string error = GetScriptFunctionArgs(4, line, out List<string> args, 1);
       if (!string.IsNullOrEmpty(error))
       {
@@ -2448,6 +2474,7 @@ namespace Gemus
 
     private string Validate_KILL_PROCESS(ref string line, out string filename)
     {
+      filename = string.Empty;
       string error = GetScriptFunctionArgs(12, line, out List<string> args, 1);
       if (!string.IsNullOrEmpty(error))
       {
@@ -2462,6 +2489,7 @@ namespace Gemus
 
     private string Validate_ADD_CLP(ref string line, out string clp)
     {
+      clp = string.Empty;
       string error = GetScriptFunctionArgs(7, line, out List<string> args, 1);
       if (!string.IsNullOrEmpty(error))
       {
@@ -2476,6 +2504,7 @@ namespace Gemus
 
     private string Validate_ADD_CLP2(ref string line, out string clp)
     {
+      clp = string.Empty;
       string error = GetScriptFunctionArgs(8, line, out List<string> args, 1);
       if (!string.IsNullOrEmpty(error))
       {
