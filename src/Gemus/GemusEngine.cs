@@ -176,6 +176,17 @@ namespace Gemus
       _emuFile = Path.Combine(_appPathWithBackSlash, gbName, "Emulators.ini");
       _gbName = gbName;
 
+      // Prefer Gemus.ini [Settings] ArchiveBackend if present
+      string gemusIni = Path.Combine(_appPathWithBackSlash, _gbName, "Gemus.ini");
+      string backendValue = GemusIniHelper.GetIniMessage("Settings", "ArchiveBackend", string.Empty, gemusIni);
+      if (!string.IsNullOrWhiteSpace(backendValue))
+      {
+        if (TrySetArchiveBackend(backendValue, out var parsedBackend))
+          _logger.LogStatus($"Archive backend set from Gemus.ini: {parsedBackend}");
+        else
+          _logger.LogStatus($"Archive backend in Gemus.ini not recognized: '{backendValue}'");
+      }
+
       _pathsIniFile = Path.Combine(_appPathWithBackSlash, _gbName, "Paths.ini");
       LoadPaths();
 
