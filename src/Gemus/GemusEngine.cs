@@ -159,6 +159,18 @@ namespace Gemus
       _repackAdditional = additionalFilesRule;
     }
 
+    public void SetArchiveBackend(ArchiveBackend backend) => _unpacker.Backend = backend;
+
+    public bool TrySetArchiveBackend(string? backend, out ArchiveBackend parsed)
+    {
+      if (ArchiveUnpacker.TryParseBackend(backend, out parsed))
+      {
+        _unpacker.Backend = parsed;
+        return true;
+      }
+      return false;
+    }
+
     public void Init(string gbName)
     {
       _emuFile = Path.Combine(_appPathWithBackSlash, gbName, "Emulators.ini");

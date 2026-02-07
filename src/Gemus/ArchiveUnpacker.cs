@@ -26,6 +26,7 @@ namespace Gemus
   public class ArchiveUnpacker
   {
     private const string GemusMarkerFile = "__gemus";
+    private const string EnvArchiveBackend = "GEMUS_ARCHIVE_BACKEND";
     private readonly CrcCalculator _crc = new();
     private readonly List<SnapshotEntry> _preSnapshot = new();
     private readonly List<SnapshotEntry> _postSnapshot = new();
@@ -54,6 +55,8 @@ namespace Gemus
       _appPathWbs = AppContext.BaseDirectory;
       if (!_appPathWbs.EndsWith("\\", StringComparison.Ordinal))
         _appPathWbs += "\\";
+
+      Backend = GetDefaultBackend();
     }
 
     public bool Unpack(string gamePathFile, string defaultFile, IReadOnlyList<string> runnableFileTypes,
@@ -265,6 +268,45 @@ namespace Gemus
     }
 
     public string GetFinalFolder() => _finalFolder;
+
+    public static ArchiveBackend GetDefaultBackend()
+    {
+      string? env = Environment.GetEnvironmentVariable(EnvArchiveBackend);
+      if (TryParseBackend(env, out var backend))
+        return backend;
+
+      return OperatingSystem.IsWindows() ? ArchiveBackend.SevenZipCli : ArchiveBackend.Managed7Zip;
+    }
+
+    public static bool TryParseBackend(string? value, out ArchiveBackend backend)
+    {
+      backend = ArchiveBackend.SevenZipCli;
+      if (string.IsNullOrWhiteSpace(value))
+        return false;
+
+      string v = value.Trim().ToLowerInvariant();
+      switch (v)
+      {
+        case "sevenzipcli":
+        case "sevenzip":
+        case "7zip":
+        case "7z":
+        case "cli":
+          backend = ArchiveBackend.SevenZipCli;
+          return true;
+        case "managedzip":
+        case "zip":
+          backend = ArchiveBackend.ManagedZip;
+          return true;
+        case "managed7zip":
+        case "sharpcompress":
+        case "managed":
+          backend = ArchiveBackend.Managed7Zip;
+          return true;
+        default:
+          return Enum.TryParse(value, true, out backend);
+      }
+    }
 
     public bool Repack(bool askUser, bool notifyUser, string destFolderWithBackSlash, string originalArchivePath,
       Models.RezipAdditionalFiles additionalFilesRule, out bool wasRepacked, out string error)
