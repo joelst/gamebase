@@ -159,13 +159,25 @@ namespace Gemus
       _repackAdditional = additionalFilesRule;
     }
 
-    public void SetArchiveBackend(ArchiveBackend backend) => _unpacker.Backend = backend;
+    public void SetArchiveBackend(ArchiveBackend backend) => SetArchiveBackend(backend, false);
 
-    public bool TrySetArchiveBackend(string? backend, out ArchiveBackend parsed)
+    public void SetArchiveBackend(ArchiveBackend backend, bool persistToIni)
+    {
+      _unpacker.Backend = backend;
+      if (persistToIni && !string.IsNullOrEmpty(_gbName) && !string.IsNullOrEmpty(_appPathWithBackSlash))
+      {
+        string gemusIni = Path.Combine(_appPathWithBackSlash, _gbName, "Gemus.ini");
+        GemusIniHelper.WriteIniValue("Settings", "ArchiveBackend", backend.ToString(), gemusIni);
+      }
+    }
+
+    public bool TrySetArchiveBackend(string? backend, out ArchiveBackend parsed) => TrySetArchiveBackend(backend, false, out parsed);
+
+    public bool TrySetArchiveBackend(string? backend, bool persistToIni, out ArchiveBackend parsed)
     {
       if (ArchiveUnpacker.TryParseBackend(backend, out parsed))
       {
-        _unpacker.Backend = parsed;
+        SetArchiveBackend(parsed, persistToIni);
         return true;
       }
       return false;
