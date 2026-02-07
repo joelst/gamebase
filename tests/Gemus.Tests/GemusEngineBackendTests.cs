@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Gemus;
 using GBFuncs;
 using Xunit;

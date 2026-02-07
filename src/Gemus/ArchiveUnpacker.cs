@@ -27,6 +27,7 @@ namespace Gemus
   {
     private const string GemusMarkerFile = "__gemus";
     private const string EnvArchiveBackend = "GEMUS_ARCHIVE_BACKEND";
+    private const string EnvSevenZipPath = "GEMUS_SEVENZIP_PATH";
     private readonly CrcCalculator _crc = new();
     private readonly List<SnapshotEntry> _preSnapshot = new();
     private readonly List<SnapshotEntry> _postSnapshot = new();
@@ -145,7 +146,7 @@ namespace Gemus
       string? sevenZip = null;
       if (backend == ArchiveBackend.SevenZipCli)
       {
-        sevenZip = GetExtractorPath("7z.exe");
+        sevenZip = TryLocateSevenZipCli();
         if (string.IsNullOrEmpty(sevenZip))
         {
           error = "Unable to locate 7z.exe for unpacking archives";
@@ -352,7 +353,7 @@ namespace Gemus
       string? sevenZip = null;
       if (_backendUsed == ArchiveBackend.SevenZipCli)
       {
-        sevenZip = GetExtractorPath("7z.exe");
+        sevenZip = TryLocateSevenZipCli();
         if (string.IsNullOrEmpty(sevenZip))
         {
           error = "Unable to locate 7z.exe for repacking archives";
@@ -505,7 +506,12 @@ namespace Gemus
 
     private string? GetExtractorPath(string filename)
     {
-      string appPath = Path.Combine(_appPathWbs, filename);
+      return GetExtractorPathStatic(filename);
+    }
+
+    private static string? GetExtractorPathStatic(string filename)
+    {
+      string appPath = Path.Combine(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar, filename);
       if (File.Exists(appPath))
         return appPath;
       if (File.Exists(filename))
@@ -518,6 +524,53 @@ namespace Gemus
       string dir = Path.GetDirectoryName(pathFile) ?? string.Empty;
       string file = Path.GetFileName(pathFile);
       return (dir, file);
+    }
+
+    public static bool IsSevenZipCliAvailable() => !string.IsNullOrEmpty(TryLocateSevenZipCli());
+
+    public static string? TryLocateSevenZipCli()
+    {
+      // env override
+      string? env = Environment.GetEnvironmentVariable(EnvSevenZipPath);
+      if (!string.IsNullOrWhiteSpace(env) && File.Exists(env))
+        return env;
+
+      // check app folder/current folder
+      string? appPath7z = GetExtractorPathStatic("7z.exe");
+      if (!string.IsNullOrEmpty(appPath7z)) return appPath7z;
+      string? appPath7za = GetExtractorPathStatic("7za.exe");
+      if (!string.IsNullOrEmpty(appPath7za)) return appPath7za;
+
+      // PATH search
+      var pathEnv = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+      foreach (var dir in pathEnv.Split(Path.PathSeparator))
+      {
+        try
+        {
+          if (string.IsNullOrWhiteSpace(dir)) continue;
+          string candidate = Path.Combine(dir, "7z.exe");
+          if (File.Exists(candidate)) return candidate;
+          candidate = Path.Combine(dir, "7za.exe");
+          if (File.Exists(candidate)) return candidate;
+        }
+        catch { }
+      }
+
+      // default install locations
+      string? pf = Environment.GetEnvironmentVariable("ProgramFiles");
+      string? pfx86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+      foreach (var baseDir in new[] { pf, pfx86 })
+      {
+        try
+        {
+          if (string.IsNullOrWhiteSpace(baseDir)) continue;
+          string candidate = Path.Combine(baseDir, "7-Zip", "7z.exe");
+          if (File.Exists(candidate)) return candidate;
+        }
+        catch { }
+      }
+
+      return null;
     }
 
     private static string GetRelativePath(string root, string pathFile)
