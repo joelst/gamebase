@@ -94,11 +94,13 @@ namespace GBSql
   /// <summary>
   /// Builds SQL query strings for GameBase Custom Views.
   /// Converted from VB6 clsQuery class.
+  /// Updated for SQLite syntax compatibility.
   /// </summary>
   public class QueryBuilder
   {
     private CVFilter[] _filters = Array.Empty<CVFilter>();
     private int _filterCount;
+    private bool _useSqliteSyntax = true; // Use SQLite syntax by default
     private bool _isGamesTable;
     private string _secColFields = string.Empty;
     private string _defaultFields = string.Empty;
@@ -108,6 +110,31 @@ namespace GBSql
 
     private const string DefGamesFields = "Games.Name, Games.CCode, Games.GA_Id, Games.Fav AS Bold1, Games.Classic AS Bold2";
     private const string DefGamesTable = "Games";
+
+    /// <summary>
+    /// Gets or sets whether to use SQLite syntax (% wildcards, 1/0 booleans).
+    /// Default is true. Set to false for Access/Jet compatibility.
+    /// </summary>
+    public bool UseSqliteSyntax
+    {
+      get => _useSqliteSyntax;
+      set => _useSqliteSyntax = value;
+    }
+
+    /// <summary>
+    /// Returns the appropriate wildcard character based on syntax mode.
+    /// </summary>
+    private string Wildcard => _useSqliteSyntax ? "%" : "*";
+
+    /// <summary>
+    /// Returns the boolean literal for the specified value.
+    /// </summary>
+    private string BoolLiteral(bool value)
+    {
+      if (_useSqliteSyntax)
+        return value ? "1" : "0";
+      return value ? "True" : "False";
+    }
     private const string DefMusicFields = "Music.Name, Music.GA_Id, Music.SFav AS Bold1";
     private const string DefMusicTable = "Music";
 
@@ -173,7 +200,7 @@ namespace GBSql
       }
       else if (_noAdultItems)
       {
-        query += $" WHERE ({_defaultTable}.Adult = False)";
+        query += $" WHERE ({_defaultTable}.Adult = {BoolLiteral(false)})";
       }
 
       // ORDER BY
@@ -228,8 +255,8 @@ namespace GBSql
 
         case FilterClauseType.FileExists:
           return filter.Operator == FilterOperator.Equal
-              ? $"{tableDotField} = True"
-              : $"{tableDotField} = False";
+              ? $"{tableDotField} = {BoolLiteral(true)}"
+              : $"{tableDotField} = {BoolLiteral(false)}";
 
         case FilterClauseType.IsDatabaseField:
           return GetDatabaseFieldFilter(filter.Operator, fieldName, tableDotField, clauseData);
@@ -247,22 +274,22 @@ namespace GBSql
       return op switch
       {
         FilterOperator.Equal => isGenres
-            ? $"{tableDotField} LIKE \"*{escaped}*\" OR PGenres.ParentGenre LIKE \"*{escaped}*\""
-            : $"{tableDotField} LIKE \"*{escaped}*\"",
+            ? $"{tableDotField} LIKE \"{Wildcard}{escaped}{Wildcard}\" OR PGenres.ParentGenre LIKE \"{Wildcard}{escaped}{Wildcard}\""
+            : $"{tableDotField} LIKE \"{Wildcard}{escaped}{Wildcard}\"",
 
         FilterOperator.DoesNotEqual => isGenres
-            ? $"{tableDotField} NOT LIKE \"*{escaped}*\" OR PGenres.ParentGenre LIKE \"*{escaped}*\""
-            : $"{tableDotField} NOT LIKE \"*{escaped}*\"",
+            ? $"{tableDotField} NOT LIKE \"{Wildcard}{escaped}{Wildcard}\" OR PGenres.ParentGenre LIKE \"{Wildcard}{escaped}{Wildcard}\""
+            : $"{tableDotField} NOT LIKE \"{Wildcard}{escaped}{Wildcard}\"",
 
         FilterOperator.StartsWith => isGenres
-            ? $"{tableDotField} LIKE \"{escaped}*\" OR PGenres.ParentGenre LIKE \"{escaped}*\""
-            : $"{tableDotField} LIKE \"{escaped}*\"",
+            ? $"{tableDotField} LIKE \"{escaped}{Wildcard}\" OR PGenres.ParentGenre LIKE \"{escaped}{Wildcard}\""
+            : $"{tableDotField} LIKE \"{escaped}{Wildcard}\"",
 
         FilterOperator.EndsWith => isGenres
-            ? $"{tableDotField} LIKE \"*{escaped}\" OR PGenres.ParentGenre LIKE \"*{escaped}\""
-            : $"{tableDotField} LIKE \"*{escaped}\"",
+            ? $"{tableDotField} LIKE \"{Wildcard}{escaped}\" OR PGenres.ParentGenre LIKE \"{Wildcard}{escaped}\""
+            : $"{tableDotField} LIKE \"{Wildcard}{escaped}\"",
 
-        _ => $"{tableDotField} LIKE \"*{escaped}*\""
+        _ => $"{tableDotField} LIKE \"{Wildcard}{escaped}{Wildcard}\""
       };
     }
 
@@ -356,7 +383,7 @@ namespace GBSql
 
       if (_noAdultItems)
       {
-        sb.Append($" AND ({_defaultTable}.Adult = False)");
+        sb.Append($" AND ({_defaultTable}.Adult = {BoolLiteral(false)})");
       }
 
       sb.Append(')');

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "f:\\git\\gamebase\\src\\GameBase\\GameBase.csproj": {}
+    "F:\\git\\gamebase\\src\\GameBase\\GameBase.csproj": {}
   },
   "projects": {
-    "f:\\git\\gamebase\\src\\GameBase\\GameBase.csproj": {
+    "F:\\git\\gamebase\\src\\GameBase\\GameBase.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "f:\\git\\gamebase\\src\\GameBase\\GameBase.csproj",
+        "projectUniqueName": "F:\\git\\gamebase\\src\\GameBase\\GameBase.csproj",
         "projectName": "GameBase",
-        "projectPath": "f:\\git\\gamebase\\src\\GameBase\\GameBase.csproj",
+        "projectPath": "F:\\git\\gamebase\\src\\GameBase\\GameBase.csproj",
         "packagesPath": "C:\\Users\\joels\\.nuget\\packages\\",
-        "outputPath": "f:\\git\\gamebase\\src\\GameBase\\obj\\",
+        "outputPath": "F:\\git\\gamebase\\src\\GameBase\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "F:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,8 +33,8 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "f:\\git\\gamebase\\src\\Gemus\\Gemus.csproj": {
-                "projectPath": "f:\\git\\gamebase\\src\\Gemus\\Gemus.csproj"
+              "F:\\git\\gamebase\\src\\Gemus\\Gemus.csproj": {
+                "projectPath": "F:\\git\\gamebase\\src\\Gemus\\Gemus.csproj"
               }
             }
           }
@@ -77,14 +77,14 @@
         }
       }
     },
-    "f:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj": {
+    "F:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "f:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj",
+        "projectUniqueName": "F:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj",
         "projectName": "GBFuncs",
-        "projectPath": "f:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj",
+        "projectPath": "F:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj",
         "packagesPath": "C:\\Users\\joels\\.nuget\\packages\\",
-        "outputPath": "f:\\git\\gamebase\\src\\GBFuncs\\obj\\",
+        "outputPath": "F:\\git\\gamebase\\src\\GBFuncs\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "F:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -143,14 +143,14 @@
         }
       }
     },
-    "f:\\git\\gamebase\\src\\Gemus\\Gemus.csproj": {
+    "F:\\git\\gamebase\\src\\Gemus\\Gemus.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "f:\\git\\gamebase\\src\\Gemus\\Gemus.csproj",
+        "projectUniqueName": "F:\\git\\gamebase\\src\\Gemus\\Gemus.csproj",
         "projectName": "Gemus",
-        "projectPath": "f:\\git\\gamebase\\src\\Gemus\\Gemus.csproj",
+        "projectPath": "F:\\git\\gamebase\\src\\Gemus\\Gemus.csproj",
         "packagesPath": "C:\\Users\\joels\\.nuget\\packages\\",
-        "outputPath": "f:\\git\\gamebase\\src\\Gemus\\obj\\",
+        "outputPath": "F:\\git\\gamebase\\src\\Gemus\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "F:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -172,8 +172,8 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "f:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj": {
-                "projectPath": "f:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj"
+              "F:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj": {
+                "projectPath": "F:\\git\\gamebase\\src\\GBFuncs\\GBFuncs.csproj"
               }
             }
           }

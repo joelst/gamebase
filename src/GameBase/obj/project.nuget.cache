@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "U1u1joP1dZo=",
+  "dgSpecHash": "856P24MCNlk=",
   "success": true,
-  "projectFilePath": "f:\\git\\gamebase\\src\\GameBase\\GameBase.csproj",
+  "projectFilePath": "F:\\git\\gamebase\\src\\GameBase\\GameBase.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\joels\\.nuget\\packages\\sharpcompress\\0.44.5\\sharpcompress.0.44.5.nupkg.sha512"
   ],

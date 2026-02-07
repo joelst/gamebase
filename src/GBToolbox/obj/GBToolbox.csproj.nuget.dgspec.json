@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "f:\\git\\gamebase\\src\\GBToolbox\\GBToolbox.csproj": {}
+    "F:\\git\\gamebase\\src\\GBToolbox\\GBToolbox.csproj": {}
   },
   "projects": {
-    "f:\\git\\gamebase\\src\\GBToolbox\\GBToolbox.csproj": {
+    "F:\\git\\gamebase\\src\\GBToolbox\\GBToolbox.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "f:\\git\\gamebase\\src\\GBToolbox\\GBToolbox.csproj",
+        "projectUniqueName": "F:\\git\\gamebase\\src\\GBToolbox\\GBToolbox.csproj",
         "projectName": "GBToolbox",
-        "projectPath": "f:\\git\\gamebase\\src\\GBToolbox\\GBToolbox.csproj",
+        "projectPath": "F:\\git\\gamebase\\src\\GBToolbox\\GBToolbox.csproj",
         "packagesPath": "C:\\Users\\joels\\.nuget\\packages\\",
-        "outputPath": "f:\\git\\gamebase\\src\\GBToolbox\\obj\\",
+        "outputPath": "F:\\git\\gamebase\\src\\GBToolbox\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "F:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
