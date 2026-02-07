@@ -1,0 +1,51 @@
+DIFF.EXE (c) v0.9b 1997-2002 James Burrows
+
+This program is used for comparing two GameBase databases and reporting the 'DIFF'erences between them.
+
+DIFF should be used by people who want to help collect game information and submit it to a database maintainer or team so that they can merge your collected info into a master database.
+
+For example, DIFF was the tool used by members of the GameBase64 team when compiling the GameBase Collection of C64 Games.  Each member in the team collected game info, then submitted it to the master GB64 database for inclusion.
+
+DIFF will collect all changed games and any added games.
+
+Currently DIFF scans and reports changes to the following fields: -
+
+Game Name, Publisher, Year, Musician, Programmer, Language, Cracker, Genre, Number of Players, Simultaneous flag, Game Comment, Number of Trainers, Game Length, True Drive Emulation flag, HighScore Saver flag, Loading Screen flag, Included Docs flag, PalNTSC setting, Version Comment, Game Filename, Game-File CRC-32 value, File To Run within game file (if compressed game file), Filename Index, Picture Filename, Music Filename, Adult Game flag, Game Notes (key=value pairs), Prequel Link, Sequel Link, Related Link, Game Control Method
+
+The master database tool for merging DIFF databases is called BAC (Borg Assimilation Console) and is available (with VB6 source code) from the GameBase website.
+
+The VB6 source code for DIFF is included in the DIFF distribution zip file for those who want to tinker.
+
+============
+INSTRUCTIONS
+============
+
+It's very simple to use DIFF to collect and submit info: -
+
+1) Get an up-to-date database from the database maintainer.
+
+2) Make a backup of it (use a name like backup.mdb)
+
+3) Use the up-to-date database (not the backup) to collect the game info.
+
+4) When you wish to submit your database changes, Run DIFF and do the following: -
+
+ - First select your current changed database (from step 3)
+
+ - Then select the original backed up database (from step 2)
+
+ - Pick the letters that you have changed (if you are not sure, select all)
+
+ - Click START
+
+ - When finished, enter your name, email-address, database-name and any notes you wish to add, then send the update.mdb to the database maintainer!
+
+ - Remember to replace your backup database with the current changed one after you have submitted your update.mdb database to the database maintainer, otherwise you might submit the same info more than once if you continue to collect game info!
+
+
+Any problems, email gamebase@itsa.me.uk
+
+
+Regards
+James Burrows
+

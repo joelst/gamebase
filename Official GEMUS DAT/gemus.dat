@@ -1,0 +1,84 @@
+;The Official GEMUS.DAT file
+
+[DAT]
+Version=1.0
+
+[CREDITS]
+Author=Michael Plate
+Contact=http://www.bu22.com/
+LastUpdated=2007-08-13
+
+[Commodore 64]
+¬CCS64 v3.3¬http://www.ccs64.com¬¬CCS.exe¬3C487332¬D64;G64;G41;T64;P00;TAP;PRG;CRT¬Y¬CCS64.txt¬c64.cfg¬
+¬CCS64 v2.0 Beta DirectX¬http://www.ccs64.com¬Please consider an update to the latest version!¬ccs.exe¬7A3B9F5A¬D64;G64;G41;T64;P00;TAP;PRG;CRT¬Y¬CCS64.txt¬c64.cfg¬
+¬WinVICE v1.22¬http://www.viceteam.org¬¬x64.exe¬1B8CE647¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬WinVICE.txt¬vice.ini¬
+¬VICE v1.22¬http://www.viceteam.org¬¬x64.exe¬8502465F¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬default.txt¬vice.ini¬
+¬ALEC64 v1.12¬http://www.google.com/search?q=ALEC64+emulator¬¬c64-sp.exe¬69FD357E¬C64;P00;PRG;T64¬Y¬default.txt¬
+¬C64 Alive v0.0¬http://www.google.com/search?q=C64+alive+emulator¬Requires DOS Adlib or DOS Soundblaster support or emualtion without DOS EMS or EMM.¬C64ALIVE.EXE¬7497B805¬C64;PRG;T64¬Y¬default.txt¬
+¬C64 v0.0¬http://www.google.com/search?q=C64+emulator¬Requires DOS Hercules monochrome mode or Hercules mode emulation.¬C64.EXE¬EE88E027¬41;000;D64¬Y¬default.txt¬
+¬C64S v2.52¬http://www.phs-edv.de/c64s¬Registered Version¬c64s.exe¬7FB328E2¬D64;T64;PRG¬Y¬default.txt¬CONFIG.INI¬
+¬C64s v2.52 (Demo)¬http://www.phs-edv.de/c64s¬Unregistered 10 Minute English Demo¬c64s.exe¬B04373AE¬D64;T64;PRG¬Y¬default.txt¬CONFIG.INI¬
+¬CBM64 v2.7 Beta¬http://www.zoo-logique.org/tothpaul/¬Requires DOS Adlib FM drivers or DOS Adlib FM emulation.¬CBM64.EXE¬D8A5AA89¬D64;PRG;T64¬Y¬default.txt¬
+¬CBM64 v2.4 Beta (French)¬http://www.zoo-logique.org/tothpaul/¬No DOS Adlib FM requirement. English language with French keyboard layout.¬CBM64FR.EXE¬6A0119BE¬D64;PRG;T64¬Y¬default.txt¬
+¬CBM64 v2.4 Beta (US)¬http://tothpaul.free.fr/¬No DOS Adlib FM Requirement, but less features than v2.7b.¬CBM64US.EXE¬C924B1AA¬D64;PRG;T64¬Y¬default.txt¬
+¬CCS64 v3.3 (R1)¬http://www.ccs64.com¬Please consider an update to the latest version!¬CCS.exe¬DD63B50A¬D64;G64;G41;T64;P00;TAP;PRG;CRT¬Y¬CCS64.txt¬c64.cfg¬
+¬CCS64 v3.2¬http://www.ccs64.com¬Please consider an update to the latest version!¬CCS.exe¬DDD5CF7F¬D64;G64;G41;T64;P00;TAP;PRG;CRT¬Y¬CCS64.txt¬c64.cfg¬
+¬CCS64 v3.1¬http://www.ccs64.com¬Please consider an update to the latest version!¬CCS.exe¬6F0B594A¬D64;G64;G41;T64;P00;TAP;PRG;CRT¬Y¬CCS64.txt¬c64.cfg¬
+¬CCS64 v3.0¬http://www.ccs64.com¬Please consider an update to the latest version!¬CCS.exe¬A8E2B066¬D64;G64;G41;T64;P00;TAP;PRG;CRT¬Y¬CCS64.txt¬c64.cfg¬
+¬CCS64 v2.0 Beta DirectX (HardSID)¬http://www.ccs64.com¬Please consider an update to the latest version!¬ccs.exe¬91FAF0EA¬D64;G64;G41;T64;P00;TAP;PRG;CRT¬Y¬CCS64.txt¬c64.cfg¬
+¬CCS64 v2.0 Beta DOS¬http://www.ccs64.com¬Please consider an update to the latest version!¬ccs64.exe¬3EFF020E¬D64;G64;G41;T64;P00;TAP;PRG;CRT¬Y¬CCS64.txt¬c64.cfg¬
+¬CCS64 v2.0 Beta DOS (HardSID)¬http://www.ccs64.com¬Please consider an update to the latest version!¬ccs64.exe¬FD17340E¬D64;G64;G41;T64;P00;TAP;PRG;CRT¬Y¬CCS64.txt¬c64.cfg¬
+¬CCS64 v1.09¬http://www.ccs64.com¬Please consider an update to the latest version!¬CCSDPMI.EXE¬332644B8¬D64;T64;PRG;P00¬Y¬default.txt¬c64.cfg¬
+¬Come Back 64 v0.9Z¬http://www.google.com/search?q=comeback64+DOS+emulator¬¬CB64.EXE¬47A7637C¬PRG;P00;T64¬Y¬default.txt¬
+¬Come Back 64 v0.9H¬http://www.google.com/search?q=comeback64+DOS+emulator¬Please consider an update to the latest version!¬CB64.EXE¬3F07659F¬PRG;P00;T64¬Y¬default.txt¬
+¬Comeback64 Win32 Beta 4¬http://www.google.com/search?q=comeback64+windows+emulator¬¬CB64W.exe¬32BF238A¬PRG;P00;CRT;T64¬Y¬default.txt¬
+¬Emu64 DOS v1.0 Beta¬http://free.pages.at/and_one/emu64/¬German language Only.¬EMU64.EXE¬C48D28C8¬D64¬Y¬default.txt¬
+¬Emu64 Win9x v2.0b¬http://free.pages.at/and_one/emu64/¬German language Only.¬Emu64.exe¬56698DFA¬D64;PRG;P00;T64;CRT¬Y¬default.txt¬
+¬Free 64 v0.1¬http://www.google.com/search?q=free64+c64+emulator¬¬FREE64.EXE¬CCB234C9¬T64¬Y¬default.txt¬
+¬Frodo v4.1a¬http://frodo.cebix.net¬Frodo: Lowest compatibility, fast.¬frodo.exe¬2C4DBDE6¬D64;T64;PRG¬Y¬default.txt¬
+¬Frodo v4.1a (PC)¬http://frodo.cebix.net¬Frodo PC (Precise-Cycle): Fairly compatible, fairly slow.¬frodopc.exe¬6270FE31¬D64;T64;PRG¬Y¬default.txt¬
+¬Frodo v4.1a (SC)¬http://frodo.cebix.net¬Frodo SC (Single-Cycle): Most compatible, slow.¬frodosc.exe¬C7304CC¬D64;T64;PRG¬Y¬default.txt¬
+¬Hoxs64 v1.0.4.26¬http://www.hoxs64.com¬¬hoxs64.exe¬DC36AEC¬D64;G64;T64;P00;PRG;TAP¬Y¬default.txt¬
+¬Hoxs64 v1.0.4.24¬http://www.hoxs64.com¬Please consider an update to the latest version!¬hoxs64.exe¬D81504AF¬D64;G64;T64;P00;PRG;TAP¬Y¬default.txt¬
+¬Hoxs64 v1.0.4.23¬http://www.hoxs64.com¬Please consider an update to the latest version!¬hoxs64.exe¬7ED94C41¬D64;G64;T64;P00;PRG;TAP¬Y¬default.txt¬
+¬Hoxs64 v1.0.4.22¬http://www.hoxs64.com¬Please consider an update to the latest version!¬hoxs64.exe¬C7F538EF¬D64;G64;T64;P00;PRG;TAP¬Y¬default.txt¬
+¬Hoxs64 v1.0.2.6¬http://www.hoxs64.com¬Please consider an update to the latest version!¬hoxs64.exe¬43C495DE¬D64;G64;T64;P00;PRG;TAP¬Y¬default.txt¬
+¬Hoxs64 v1.0.2.0¬http://www.hoxs64.com¬Please consider an update to the latest version!¬hoxs64.exe¬168FACCD¬D64;G64;T64;P00;PRG;TAP¬Y¬default.txt¬
+¬MESS DOS v0.89¬http://www.mess.org/¬Requires VESA (VBE) DOS video drivers or VESA emulation.¬dmess.exe¬AAF5D8A6¬P00;PRG;D64;CRT;80;90;A0;B0;C0;D0;E0;F0;T64¬Y¬default.txt¬
+¬MESS Win32 v0.96¬http://www.mess.org/¬¬mess.exe¬A1A18927¬T64;P00;PRG;D64;CRT;80;90;A0;B0;C0;D0;E0;F0¬Y¬default.txt¬
+¬NO$C64 v1.1¬http://nocash.emubase.de/c64.htm¬nocash C64 (NO$C64) Windows version.¬NO$C64.EXE¬B4C51F95¬P00;PRG;T64¬Y¬default.txt¬NO$C64.INI¬
+¬NO$C64 v1.0¬http://nocash.emubase.de/c64.htm¬Please consider an update to the latest version!¬NO$C64.EXE¬AA2C8EF7¬P00;PRG;T64¬Y¬default.txt¬NO$C64.INI¬
+¬NO$C64 v1.1 DOS¬http://nocash.emubase.de/c64.htm¬nocash C64 (NO$C64) DOS version.¬NO$C64.EXE¬D68B2E72¬P00;PRG;T64¬Y¬default.txt¬NO$C64.CFG¬
+¬NO$C64 v1.0 DOS¬http://nocash.emubase.de/c64.htm¬Please consider an update to the latest version!¬NO$C64.EXE¬4F5F72EB¬P00;PRG;T64¬Y¬default.txt¬NO$C64.CFG¬
+¬PC64Dos v1.22 (English)¬http://www.funet.fi/pub/cbm/crossplatform/emulators/msdos/pc64/¬PC64 is now freeware.¬PC64.EXE¬342CCD90¬D64;C64;P00;T64¬Y¬default.txt¬
+¬PC64Dos v1.22 (German)¬http://www.funet.fi/pub/cbm/crossplatform/emulators/msdos/pc64/¬PC64 is now freeware.¬PC64.EXE¬54CB2ADF¬D64;C64;P00;T64¬Y¬default.txt¬
+¬PC64Win v2.15 Beta¬http://www.funet.fi/pub/cbm/crossplatform/emulators/msdos/pc64/¬PC64Win is now freeware.¬PC64WIN.EXE¬396ECB21¬D64;C64;P00;T64¬Y¬default.txt¬
+¬PC64Win v2.14¬http://www.funet.fi/pub/cbm/crossplatform/emulators/msdos/pc64/¬PC64Win is now freeware.¬PC64WIN.EXE¬E5D30E5F¬D64;C64;P00;T64¬Y¬default.txt¬
+¬Sally C64 v0.20¬http://www.google.com/search?q=sally+C64+emulator¬¬64.EXE¬D9C19700¬64P;PRG;T64;¬Y¬default.txt¬
+¬VB64 v2.7 Beta¬http://vb64.emuunlim.com/¬¬vb64.exe¬70853AC0¬PRG;CRT;P00;T64¬Y¬default.txt¬
+¬VB64 v2.1 Beta¬http://vb64.emuunlim.com/¬Please consider an update to the latest version!¬vb64.exe¬E1DC0DC7¬PRG;CRT;P00;T64¬Y¬default.txt¬
+¬VB64 v2.0 Beta¬http://vb64.emuunlim.com/¬Please consider an update to the latest version!¬vb64.exe¬AB213AE2¬PRG;CRT;P00;T64¬Y¬default.txt¬
+¬VB64 v1.19 Beta¬http://vb64.emuunlim.com/¬Please consider an update to the latest version!¬vb64.exe¬234C9307¬PRG;CRT;P00;T64¬Y¬default.txt¬
+¬VB64 v1.13 Beta¬http://vb64.emuunlim.com/¬Please consider an update to the latest version!¬vb64.exe¬253236D0¬PRG;CRT;P00;T64¬Y¬default.txt¬
+¬VB64 v0.01 Beta¬http://vb64.emuunlim.com/¬Please consider an update to the latest version!¬c64emu.exe¬FA9E53EE¬PRG;CRT;P00;T64¬Y¬default.txt¬
+¬VICE v1.22¬http://www.viceteam.org¬¬x64.exe¬8502465F¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬default.txt¬vice.ini¬
+¬VICE v1.21¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬5093F772¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬default.txt¬vice.ini¬
+¬VICE v1.20¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬F850E01D¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬default.txt¬vice.ini¬
+¬VICE v1.19¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬813DF5C7¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬default.txt¬vice.ini¬
+¬VICE v1.18¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬3969D2CF¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬default.txt¬vice.ini¬
+¬VICE v1.17¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬F5481BE5¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬default.txt¬vice.ini¬
+¬VICE v1.16¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬7001EBE6¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬default.txt¬vice.ini¬
+¬VICE v1.15¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬224BF203¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬default.txt¬vice.ini¬
+¬Win64 v0.40 Beta¬http://www.geocities.com/masonralph/win64.htm¬¬Win64.exe¬4D2BD76E¬D64;T64;PRG;C64;P00¬Y¬default.txt¬
+¬WinVICE v1.21¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬F78288AD¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬WinVICE.txt¬vice.ini¬
+¬WinVICE v1.20¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬2E1749B2¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬WinVICE.txt¬vice.ini¬
+¬WinVICE v1.19¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬737D2A67¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬WinVICE.txt¬vice.ini¬
+¬WinVICE v1.18¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬801EF9¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬WinVICE.txt¬vice.ini¬
+¬WinVICE v1.17¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬BAC7BF2E¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬WinVICE.txt¬vice.ini¬
+¬WinVICE v1.16¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬10F9C89B¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬WinVICE.txt¬vice.ini¬
+¬WinVICE v1.15¬http://www.viceteam.org¬Please consider an update to the latest version!¬x64.exe¬AC5D39D2¬D64;D71;D80;D81;D82;G64;G41;X64;T64;P00;TAP;PRG;CRT¬Y¬WinVICE.txt¬vice.ini¬
+
+[ZX Spectrum]
+¬Gleck¬http://gleck.emuunlim.com/eng/main.htm¬¬Gleck.exe¬*¬sna;tap;tzx;zxs;z80;scr;sp;blk¬Y¬default.txt¬
+¬zx32¬http://www.geocities.com/SiliconValley/Bay/9932/¬¬zx32.exe¬*¬sna;tap;tzx;zxs;z80;scr¬Y¬default.txt¬
+¬ZX Plus¬http://www.emuunlim.com/zxplus/¬¬zxplus.exe¬*¬sna;tap;tzx;z80;¬Y¬default.txt¬

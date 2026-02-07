@@ -1,0 +1,303 @@
+======================================================================
+               *****  GAMEBASE DEVELOPER GUIDE  *****
+======================================================================
+
+
+
+----------------------------------------------------------------------
+                               CONTENTS
+----------------------------------------------------------------------
+
+
+1.  Before you Start
+
+2.  Variable Naming Conventions
+
+3.  Summary of Components
+
+4.  Building GameBase
+
+----------------------------------------------------------------------
+                        1.  BEFORE YOU START
+----------------------------------------------------------------------
+
+
+REGISTERING THE SUPPORT DLLs
+============================
+If you're not compiling everything from scratch, or you don't already
+have GameBase installed from the binary distribution, you'll need to
+register the following GameBase DLL's before even loading up VB.  You
+can do this on the command line (or Start->Run) by typing: -
+
+regsvr32.exe <filename>
+
+where <filename> is the path\filename of one of the following DLLs: -
+
+GBFuncs.dll
+GBSql.dll
+Gemus.dll
+
+You should register these in the order they are listed above.
+
+
+A NOTE ON BINARY COMPATIBILITY
+==============================
+GBFuncs.vbp, GBSql.vbp and Gemus.vbp all are binary compatible with
+the compiled versions in the Build folder of the source distribution.
+In order not to break someone's earlier installation of GameBase, you
+must enforce this binary compatibility when compiling new versions.
+If you don't know what I'm talking about, then you shouldn't really be
+modifying these components!
+
+
+DEBUG MODE
+==========
+GameBase uses subclassing in order to restrict some of it's forms
+to certain sizes.  This can cause the VB IDE to crash if an error has
+occurred in the code at runtime.  For this reason, I use a global
+boolean flag in certain circumstances to turn off the subclassing.  I
+recommend that you should use this flag when running GameBase from
+inside the VB IDE.  Don't forget to set the flag back before compiling
+though! :)
+
+To turn subclassing on set the flag to True.
+To turn it off set it to False.
+
+The flags in question are: -
+
+GameBase.vbp
+	--> modGlobals.bas
+		--> g_blnInVBIDE
+
+Gemus.vbp
+	--> frmGB64Main.frm
+		--> g_blnInVBIDE
+
+
+----------------------------------------------------------------------
+                   2.  VARIABLE NAMING CONVENTIONS
+----------------------------------------------------------------------
+
+
+The variable naming conventions I used during the initial development
+are as follows.  Please note that I tried to stick to these
+throughout, but there may be times where I didn't (probably due to me
+having a bad day or something).  If you are making modifications to
+the code, please try and stick to these conventions as much as
+possible.
+
+It's probably easiest to explain these with examples....
+
+blnFound			A local boolean variable
+
+intNum				A local integer variable
+
+m_strFieldName		A string variable, at form or class level
+					(e.g. a class member variable)
+
+dblPrice			A local double variable
+
+m_lngIdx			A long variable, at form or class level
+					(e.g. a class member variable)
+					Note: I generally use Idx to refer to loop
+					counter variables
+
+a_strVars			A local array of string variables
+
+ma_lngCounters		An array of longs, at form or class level
+					(e.g. a class member variable)
+
+udtDetails			A variable created as a user-defined-type
+					(i.e. a var that was defined with VB's 'Type')
+
+g_blnWin98			A global boolean variable (global to all forms
+					and classes in the current project)
+
+ga_udtLookupTable	A global array of user-defined-type variables
+
+objFunc				A local variable created as an instance of a
+					class, where that class is located in the same
+					VB project
+
+m_xobjFunc			A form or class level variable created as an
+					instance of a class, where that class is
+					located in another project or library (x =
+					external)
+
+mc_strCOPYRIGHT		A form or class level constant of type string
+
+gc_lngUNKNOWN		A global constant of type long
+
+
+You should be getting the idea by now! :)
+
+
+----------------------------------------------------------------------
+                      3.  SUMMARY OF COMPONENTS
+----------------------------------------------------------------------
+
+
+GBFuncs.vbp/.dll
+================
+This is a library of general helper functions, encapsulated within 3
+classes.  clsRegistry (for reading and writing to the registry), 
+clsClock (for timing) and clsFunctions for general helper functions.
+This DLL is referenced by most other components in GameBase, so should
+be the first component you compile when building GameBase.
+
+Dependencies: -
+
+References: None
+Components: None
+Files:      None
+
+
+GBSql.vbp/.dll
+==============
+This library contains 2 classes.  One is for managing the 2nd column
+in GameBase, and the other is for building SQL queries.  Both classes
+deal with GameBase's Custom View engine.
+
+Dependencies: -
+
+References: GBFuncs.dll
+Components: None
+Files:      None
+
+
+Gemus.vbp/.dll
+==============
+This component contains the GEMUS (Gamebase EMUlator Script) engine.
+It contains the runtime GEMUS interpreter, and all the forms that
+GEMUS uses to allow the user to configure it.  Also, this component
+contains classes that read and parse various game file types (i.e.
+various C64 file types).  Unzipping and Re-zipping of gamefiles is
+also handled here.
+
+Dependencies: -
+
+References: GBFuncs.dll
+Components: comdlg32.ocx, mscomctl.ocx (Microsoft ActiveX Controls)
+Files:      GemusText.ini (included as #101 in GEMUS.RES)
+
+
+GameBase.vbp/.exe
+=================
+This is the main GameBase frontend executable.
+
+Dependencies: -
+
+References: dao360.dll (Microsoft Data Access Objects 3.6)
+			PNGlib.dll (Portable Network Graphics Library)
+			GBFuncs.dll, GBSql.dll, Gemus.dll
+Components: comdlg32.ocx, mscomctl.ocx, tabctl32.ocx (MS ActiveX)
+Files:      GBText.ini (included as #102 in GAMEBASE.RES)
+			BMP2GIF.EXE
+			BMP2PNG.EXE
+			Empty.mdb
+
+
+GBToolbox.vbp/.exe
+==================
+This is the main GameBase Toolbox executable.
+
+Dependencies: -
+
+References: dao360.dll (Microsoft Data Access Objects 3.6)
+			GBFuncs.dll
+Components: comdlg32.ocx, mscomctl.ocx (Microsoft ActiveX Controls)
+Files:      Text.ini (included as #101 in GAMEBASE.RES)
+			Gfx\gfx.txt (included as #102 in GAMEBASE.RES)
+			help.htm (included as #103 in GAMEBASE.RES)
+			credits.ini (included as #104 in GAMEBASE.RES)
+
+
+Diff.vbp/.exe
+=============
+Diff is a tool for logging all changes made between two databases,
+so that the changes it has logged may be imported into a master
+database by the corresponding BAC utility (Borg Assimilation
+Console - see below)
+
+Dependencies: -
+
+References: dao360.dll (Microsoft Data Access Objects 3.6)
+Components: comdlg32.ocx, mscomctl.ocx, tabctl32.ocx (MS ActiveX)
+Files:      update.mdb
+
+
+BAC.vbp/.exe [UNFINISHED - NOT FULLY WORKING]
+=============================================
+This utility is meant to take 'diff' databases created with the
+Diff.exe utility, and merge them into a master database.  This is
+currently unfinished and is not fully working yet.  If anyone
+wants to work on GB... then I guess this is the component that is
+needed most!
+
+Dependencies: -
+
+References: dao360.dll (Microsoft Data Access Objects 3.6)
+			GBFuncs.dll
+Components: comdlg32.ocx, mscomctl.ocx (Microsoft ActiveX Controls)
+Files:      None
+
+
+HVSC2GB64.vbp/.exe
+==================
+This utility was written for the GB64 Team and is specfic to the
+GB64 Collection.  It updates the GB64 database with relevant info
+from the HVSC (High Voltage SID Collection)
+
+Dependencies: -
+
+References: dao360.dll (Microsoft Data Access Objects 3.6)
+Components: comdlg32.ocx, mscomctl.ocx, tabctl32.ocx (MS ActiveX)
+			GBFuncs.dll
+Files:		None
+
+
+----------------------------------------------------------------------
+                        4.  BUILDING GAMEBASE
+----------------------------------------------------------------------
+
+Here's the checklist that I use when building GameBase: -
+
+1)  Build GBFuncs.dll
+2)  Build GBSql.dll
+3)  Check Gemus.vbp has debug mode off (subclassing on)
+4)  Update resource file in Gemus.vbp with latest GemusText.ini
+5)  Build Gemus.dll
+6)  Check GameBase.vbp has debug mode off (subclassing on)
+7)  Update resource file in GameBase.vbp with latest GBText.ini
+8)  Build GameBase.exe
+9)  Check GToolbox.vbp has debug mode off (subclassing on)
+10) Update resource file in GBToolbox.vbp with latest text.ini files
+11) Build GBToolbox.exe
+
+To package GameBase for release, I use a freeware setup program called
+Inno Setup (http://www.innosetup.com/).  There are 3 .iss files used
+to package GameBase (Inno Setup Script files).  They are as follows: -
+
+1)  GameBase.iss
+
+This is the full setup including VB Runtimes and all Database and
+ActiveX components.
+
+2) GameBaseNoJet.iss
+
+This is as above but without the Jet/DAO Database drivers.
+
+3) GameBaseUpdateFromX.XX.iss
+
+This produces a package that will update GameBase from a previous
+version.
+
+If you check out these Inno Setup scripts, you'll see all the files
+that GameBase requires to run, and where they should be installed.
+
+
+Well, that's it!  The rest is up to you!
+
+Good luck!
+
+/James

@@ -1,0 +1,230 @@
+;******************************
+;* CCS64 Default GEMUS Script *
+;*      (c) The GB64 Team     *
+;*       16 August 2007       *
+;******************************
+;
+; PLEASE SET YOUR EMULATOR PROPERTIES AS FOLLOWS:
+;
+; Emulator File: CCS64.EXE (DOS Version)
+;                CCS.EXE   (DirectX Version)
+; Associated Script File (1): C64.CFG
+; Use Short Filenames: YES
+; File Types: D64;T64;PRG;P00;P01;G64;G41;CRT;TAP
+;
+; This script was written for CCS64 v2.0 DirectX beta,
+; but may work with other versions too.
+;
+; Emulator Website: http://www.ccs64.com
+;
+; To enable the REU (RAM Expansion Unit),
+; use the key=value pair: reu=x
+; where x is 128,256,512,1024,2048,4086,8192 or 16384
+
+If GameType CONTAINS(t64||prg||p00||p01||d64||g64||g41||crt||tap)
+
+	;Screen mode (and window mode) options
+	;Some video modes may not be supported and may look different dependent on used emulator
+	;Option to start in a preset screen mode. Some video modes may not be supported.
+	;CCS64 v2: 0=windowed, 10=600x800.
+	;CCS64 v3: 0=Window, 1=Window 2X, 3=Window 3X, 12=320x200x16, 13=320x240x16, 14=400x300x16.
+	;Set_CFG_Value(1||$SCREENMODE||0)
+
+	;Option to start in windowed mode. Not all video modes are supported,
+	;The window is not floating (it is fixed in the upper-left corner)
+	;This option is only valid for the DirectX emu versions
+	;Add_CLP( -window)
+
+	;set the HardSID ID (5 is the default ID)
+	;This option is only valid for the emu versions supporting HardSID 
+	;Add_CLP( -hardsid 5)
+
+	;option to disable/enable sound
+	;Set_CFG_Value(1||$SOUNDENABLE||NO)
+
+	;Option to use max emulator speed during disk load (not always reliable)
+	;Set_CFG_Value(1||$MAX1541SPEED||1)
+
+	;set disk save mode (0=never, 1=ask, 2=continuously)
+	Set_CFG_Value(1||$DISKSAVEMODE||2)
+
+	;do we want a PAL or NTSC setup?
+	If PalNTSC = NTSC
+		;1=NTSC (65x263), 2=NTSC (65x262)
+		Set_CFG_Value(1||$SYSTEMMODE||1)
+	Else
+		;0=PAL (63x312)
+		Set_CFG_Value(1||$SYSTEMMODE||0)
+	End If
+
+	;load the selected game image
+	Add_CLP( %gamepathfile%)
+	If GameType CONTAINS(d64||t64)
+		Add_CLP(,%imageindex%)
+
+		;true drive emulation?
+		If TrueDriveEmu = NO
+			Add_CLP( -fastload)
+		Else
+			Add_CLP( -normalload)
+		End If
+	End If
+
+	;set the game path for the emulator
+	Set_CFG_Value(1||$LOADPATH||%gamepath%)
+
+	;check for 'manual load' verison comments
+	If VersionComment CONTAINS(*load manually*)
+		Add_CLP( -manualrun)
+	Else
+		;autorun the loaded image
+		Add_CLP( -autorun)
+	End If
+
+	;option to set screenshot size settings to 320x200 with no C64 border (GBC style)
+	;Set_CFG_Value(1||$SCREENSHOTSTARTX||128)
+	;Set_CFG_Value(1||$SCREENSHOTSTOPX||448)
+	;Set_CFG_Value(1||$SCREENSHOTSTARTY||51)
+	;Set_CFG_Value(1||$SCREENSHOTSTOPY||251)
+
+	;set the game controls
+	;These settings are designed to automatically set the controls for player 1
+	;to the same controller, regardless of which PORT the game uses for player 1.
+	;
+	;PORTx: 0=None, 1=Joystick, 2=Mouse C1531, 3=Paddles
+	;MODE for PORTx=1: 0=PC Gameport 1, 1=PC Gameport 2, 2=Key-Set 1,
+	;     3=Key-Set 2, 4=Key-Set 3, 5=Adapter Port 1, 6=Adapter Port 2
+	;MODE for PORTx=2: 0=PC Mouse, 1=PC Gameport 1, 2=PC Gameport 2,
+	;                  3=Key-Set 1, 4=Key-Set 2, 5=Key-Set 3
+	;MODE for PORTx=3: 0=PC Mouse+PC Mouse, ..., 80=PC Mouse+Key-Set 3,
+	;     48=PC Mouse+Key-Set 1, 64=PC Mouse+Key-Set 2
+	;
+	;Replace * with <DISABLED> to disable the automatic settings for the JoyPorts
+	If %gamefile% CONTAINS(*)
+		If Control = JoyPort2
+			;default for JoyPort2 is PORT2=Key-Set 2 (and PORT1=Key-Set 1) 
+			Set_CFG_Value(1||$CONTROLPORT2||1)
+			Set_CFG_Value(1||$CONTROLPORT2MODE||3)
+			If NumPlayers > 1
+				Set_CFG_Value(1||$CONTROLPORT1||1)
+				Set_CFG_Value(1||$CONTROLPORT1MODE||2)
+			Else
+				Set_CFG_Value(1||$CONTROLPORT1||0)
+				Set_CFG_Value(1||$CONTROLPORT1MODE||0)
+			End If
+		ElseIf Control = JoyPort1
+			;default for JoyPort1 is PORT1=Key-Set 2 (and PORT2=Key-Set 1)
+			Set_CFG_Value(1||$CONTROLPORT1||1)
+			Set_CFG_Value(1||$CONTROLPORT1MODE||3)
+			If NumPlayers > 1
+				Set_CFG_Value(1||$CONTROLPORT2||1)
+				Set_CFG_Value(1||$CONTROLPORT2MODE||2)
+			Else
+				Set_CFG_Value(1||$CONTROLPORT2||0)
+				Set_CFG_Value(1||$CONTROLPORT2MODE||0)
+			End If
+		ElseIf Control = Mouse
+			;C1531 Mouse in PORT1
+			Set_CFG_Value(1||$CONTROLPORT1||2)
+			Set_CFG_Value(1||$CONTROLPORT1MODE||0)
+			Set_CFG_Value(1||$CONTROLPORT2||0)
+			Set_CFG_Value(1||$CONTROLPORT2MODE||0)
+		ElseIf Control = PaddlePort1
+			;PaddlePort1 is typically for 1P or 2P (Simultaneous) games
+			;default is player 1 uses PC Mouse, player 2 uses Key-Set 2
+			Set_CFG_Value(1||$CONTROLPORT1||3)
+			Set_CFG_Value(1||$CONTROLPORT1MODE||64)
+			Set_CFG_Value(1||$CONTROLPORT2||0)
+			Set_CFG_Value(1||$CONTROLPORT2MODE||0)
+		ElseIf Control = PaddlePort2
+			;PaddlePort2 is typically for 2P (Alternating) or 1P PORT2 games
+			;default is both players 1 and 2 use the PC Mouse
+			Set_CFG_Value(1||$CONTROLPORT1||0)
+			Set_CFG_Value(1||$CONTROLPORT1MODE||0)
+			Set_CFG_Value(1||$CONTROLPORT2||3)
+			Set_CFG_Value(1||$CONTROLPORT2MODE||0)
+		Else
+			;clear the ports if not one of the above controls
+			Set_CFG_Value(1||$CONTROLPORT1||0)
+			Set_CFG_Value(1||$CONTROLPORT1MODE||0)
+			Set_CFG_Value(1||$CONTROLPORT2||0)
+			Set_CFG_Value(1||$CONTROLPORT2MODE||0)
+		End If
+	End If
+
+	;REU (Ram Expansion Unit) = 128,256,512,1024,2048,4086,8192 or 16384 kB
+	If Key_reu CONTAINS(*)
+		;enable REU and set to reu value
+		Set_CFG_Value(1||$REUENABLE||YES)
+		;set REU to reu value in number of 64kB units
+		If Key_reu CONTAINS(128)
+			Set_CFG_Value(1||$REUSIZE||2)
+		ElseIf Key_reu CONTAINS(256)
+			Set_CFG_Value(1||$REUSIZE||4)
+		ElseIf Key_reu CONTAINS(512)
+			Set_CFG_Value(1||$REUSIZE||8)
+		ElseIf Key_reu CONTAINS(1024)
+			Set_CFG_Value(1||$REUSIZE||16)
+		ElseIf Key_reu CONTAINS(2048)
+			Set_CFG_Value(1||$REUSIZE||32)
+		ElseIf Key_reu CONTAINS(4096)
+			Set_CFG_Value(1||$REUSIZE||64)
+		ElseIf Key_reu CONTAINS(8192)
+			Set_CFG_Value(1||$REUSIZE||128)
+		ElseIf Key_reu CONTAINS(16384)
+			Set_CFG_Value(1||$REUSIZE||256)
+		ElseIf Key_reu CONTAINS(no||no*||off||false||0)
+			;disable REU if set to off
+			Set_CFG_Value(1||$REUENABLE||NO)
+		Else
+			;default to 512 kB for all other REU values (on, yes, 500, etc.)
+			Set_CFG_Value(1||$REUSIZE||8)
+		End If
+	Else
+		;disable REU
+		Set_CFG_Value(1||$REUENABLE||NO)
+	End If
+
+	;unsupported game controls
+	If Control = Lightpen
+		Show_Message(This emulator does not have LightPen emulation.%crlfx2%This game may be uncontrollable/unplayable.)
+	ElseIf Control = KoalaPad
+		Show_Message(This emulator does not have KoalaPad emulation.%crlfx2%This game may be uncontrollable/unplayable.)
+	ElseIf Control = LightGun
+		Show_Message(This emulator does not have LightGun emulation.%crlfx2%This game may be uncontrollable/unplayable.)
+	End If
+
+	;give the user a warning message?
+	If VersionComment CONTAINS(*use VICE*||*use C64S*||*use CCS v1*||*use real C64*)
+		Show_Message(This game may not work properly with this emulator.%crlfx2%See Version Comment for more info.)
+	End If
+	If VersionComment CONTAINS(*not 100%*||*not working*||doesn't work*)
+		Show_Message(This game may not work properly.)
+	End If
+	If VersionComment CONTAINS(*load manually*)
+		Show_Message(You must load this game manually within the emulator.%crlfx2%Game file: %gamepathfile%)
+	End If
+	If VersionComment CONTAINS(*PET Emulator*)
+		Show_Message(Use PET Emulator to run this game.)
+	End If
+	If VersionComment CONTAINS(*ATTN:*||*NOTE:*||*ATTN!:*||*NOTE!:*)
+		;point out that critical info is in the version comment
+		Show_Message(Read this game's Version Comments for very important information/instructions.)
+	End If
+	If VersionComment CONTAINS(*VIC-20*||*VIC20*)
+		If VersionComment CONTAINS(*emulator*)
+			Show_Message(Use VIC-20 column Emulator to run this game properly.)
+		End If
+	End If
+
+	;run DirectX or DOS emulator
+	Run_Emulator()
+	;Run_Emulator(DOSCLOSE)
+
+Else
+
+	;invalid game file type
+	Show_Message(GAME_NOT_SUPPORTED%crlfx2%Supported types: D64, T64, G64/G41, TAP, CRT, P00, P01, PRG)
+
+End If
+

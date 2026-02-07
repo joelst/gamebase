@@ -1,0 +1,23 @@
+;default GEMUS script and template
+;
+;********************************
+;* EMULATORNAME    GEMUS Script *
+;*                              *
+;*        DAY MONTH YEAR        *
+;********************************
+;
+; PLEASE SET YOUR EMULATOR PROPERTIES AS FOLLOWS:
+;
+; Emulator File: FILENAME.EXT
+; Associated Script File (#): FILENAME.EXT
+; Use Short Filenames: YES/NO
+; File Types: EXT1;EXT2;ETC...
+;
+; This script was written for EMULATOR_NAME vX.X,
+; but may work with other versions too.
+;
+; Emulator Website: FTP_OR_WEBSITE
+
+Add_CLP(%gamepathfile%)
+Run_Emulator()
+

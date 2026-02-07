@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/GameBase/GameBase.csproj" />
+    <Project Path="src/GBFuncs/GBFuncs.csproj" />
+    <Project Path="src/GBSql/GBSql.csproj" />
+    <Project Path="src/GBToolbox/GBToolbox.csproj" />
+    <Project Path="src/Gemus/Gemus.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,10 @@
+***** GameBase Launcher v1.0 *****
+Started: 2010-02-28 20:37:24
+--> App Path: [C:\GameBase\Source\GBLauncher\]
+--> Command line: [db=TestDB fn=cosmic]
+--> db param: [TestDB]
+--> filename param: [cosmic]
+--> emu param missing: using -1 (default)
+--> wait param missing: using 0 (default)
+--> Database: [C:\GameBase\Source\GBLauncher\TestDB\TestDB.mdb] not found
+Bye!

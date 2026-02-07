@@ -1,0 +1,11 @@
+
+  =================================
+  !!! WINDOWS 7 and VISTA USERS !!!
+  =================================
+
+* Install with Administrator rights
+  
+* DO NOT install to your Program Files folder
+   (try something like C:\GameBase instead)
+
+* You may need to run GameBase.exe as Administrator

@@ -1,0 +1,256 @@
+;********************************
+;* WinVICE Default GEMUS Script *
+;*       (c) The GB64 Team      *
+;*         8 August 2007        *
+;********************************
+;
+; PLEASE SET YOUR EMULATOR PROPERTIES AS FOLLOWS:
+;
+; Emulator File: X64.EXE
+; Associated Script File (1): vice.ini
+; Use Short Filenames: YES
+; File Types: D64;T64;G64;G41;TAP;CRT;P00;PRG;LNX
+; (Compressed File Types: GZ;Z;BZ2;ZIP;TAR;TZG;ZOO)
+;
+; This script was written for WinVICE C64 v1.16,
+; but may work with other Windows C64 versions too.
+;
+; Emulator Website: http://www.viceteam.org
+;
+; If you have a disk game that comes on multiple disks
+; and works with multiple drives, you can set a
+; GEMUS key=value pair to auto insert all the disks into
+; VICE's drives.  Simply press F2 (in the main GB window)
+; and enter: maxdrives=x
+; where x is either 2, 3 or 4
+;
+; If VICE requires True Drive Emulation, but CCS64 does not,
+; use the key=value pair: vtde=yes
+; If VICE does not require True Drive Emulation, but CCS64 does,
+; use the key=value pair: vtde=no
+;
+; To enable the REU (RAM Expansion Unit),
+; use the key=value pair: reu=x
+; where x is 128,256,512,1024,2048,4086,8192 or 16384
+
+If GameType CONTAINS(d64||t64||g64||g41||tap||crt||p00||prg||lnx)
+
+	;option to turn on/off Warp Mode (speed increase) at startup
+	;Set_INI_Value(1||C64||WarpMode||1)
+
+	;option to start in fullscreen mode (no border=640x400, border=600x800 or larger)
+	;Set_INI_Value(1||C64||FullscreenEnabled||1)
+	;Set_INI_Value(1||C64||FullscreenWidth||640)
+	;Set_INI_Value(1||C64||FullscreenHeight||400)
+	;Set_INI_Value(1||C64||FullscreenBitdepth||32)
+
+	;VICII settings for Color Enhancer v0.8 (but may work with other versions too)
+	;website: http://perso.wanadoo.fr/ck/C64/filter/C64Filter.html
+	;the Color Enhancer Filter replaces the default Scale2x filter
+	;with a 32-bit color depth smoothing/dithering filter algorithm.
+	;Set_INI_Value(1||C64||VICIIDoubleSize||1)
+	;Set_INI_Value(1||C64||VICIIScale2x||1)
+
+	;set paths to file location for possible image swaps
+	Set_INI_Value(1||C64||InitialDiskDir||"%gamepath%")
+	Set_INI_Value(1||C64||InitialTapeDir||"%gamepath%")
+	Set_INI_Value(1||C64||InitialCartDir||"%gamepath%")
+	Set_INI_Value(1||C64||InitialAutostartDir||"%gamepath%")
+	Set_INI_Value(1||C64||InitialDefaultDir||"%gamepath%")
+	Set_INI_Value(1||C64||InitialSnapshotDir||"%gamepath%")
+	Set_INI_Value(1||C64||FSDevice8Dir||"%gamepath%")
+	Set_INI_Value(1||C64||Drive9Type||0)
+	Set_INI_Value(1||C64||Drive10Type||0)
+	Set_INI_Value(1||C64||Drive11Type||0)
+
+	;set to extend tracks on access
+	Set_INI_Value(1||C64||Drive8ExtendImagePolicy||2)
+	Set_INI_Value(1||C64||Drive9ExtendImagePolicy||2)
+	Set_INI_Value(1||C64||Drive10ExtendImagePolicy||2)
+	Set_INI_Value(1||C64||Drive11ExtendImagePolicy||2)
+
+	;autostart or 'manual load' the game image
+	If GameType CONTAINS(crt)
+		;autostart the cart image
+		Add_CLP( -cartcrt %gamepathfile%)
+	Else
+		;insert multiple disks into drives 9, 10 and 11?
+		If GameType CONTAINS(d64||g64||g41)
+			If Key_maxdrives CONTAINS(2||3||4)
+				If NumGameFiles > 1
+					Add_CLP2( -9 "%gamepathfile(1)%")
+					Set_INI_Value(1||C64||FSDevice9Dir||"%gamepath%")
+					Set_INI_Value(1||C64||Drive9Type||1541)
+				End If
+			End If
+			If Key_maxdrives CONTAINS(3||4)
+				If NumGameFiles > 2
+					Add_CLP2( -10 "%gamepathfile(2)%")
+					Set_INI_Value(1||C64||FSDevice10Dir||"%gamepath%")
+					Set_INI_Value(1||C64||Drive10Type||1541)
+				End If
+			End If
+			If Key_maxdrives CONTAINS(4)
+				If NumGameFiles > 3
+					Add_CLP2( -11 "%gamepathfile(3)%")
+					Set_INI_Value(1||C64||FSDevice11Dir||"%gamepath%")
+					Set_INI_Value(1||C64||Drive11Type||1541)
+				End If
+			End If
+		End If
+
+		;autostart or 'manual load' the game image
+		If ImageName CONTAINS(*)
+			If VersionComment CONTAINS(*load manually*)
+				Add_CLP2( -autoload "%gamepathfile%:%c64imagename%")
+				If Key_keybuf CONTAINS(*)
+					Add_CLP2( -keybuf %keybuf_value%)
+				End If
+			Else
+				Add_CLP2( -autostart "%gamepathfile%:%c64imagename%")
+			End If
+		Else
+			If VersionComment CONTAINS(*load manually*)
+				Add_CLP2( -autoload "%gamepathfile%)
+			Else
+				Add_CLP2( -autostart "%gamepathfile%")
+			End If
+		End If
+	End If
+
+	;do we want a PAL or NTSC setup?
+	If PalNTSC = NTSC
+		Add_CLP( -ntsc)
+	Else
+		Add_CLP( -pal)
+	End If
+
+	;true drive emulation (vtde=yes is for VICE only, not CCS64)
+	;set GEMUS key "vtde" to overrule database TrueDriveEmu settings
+	If Key_vtde CONTAINS(yes||on||true||1)
+		Add_CLP( -truedrive)
+	ElseIf Key_vtde CONTAINS(no||no*||off|false||0)
+		Add_CLP( +truedrive)
+	ElseIf TrueDriveEmu = YES
+		Add_CLP( -truedrive)
+	Else
+		Add_CLP( +truedrive)
+	End If
+
+	;set the game controls
+	;These settings are designed to automatically set the controls for player 1
+	;to the same controller, regardless of which PORT the game uses for player 1.
+	;
+	;0=None, 1=Numpad + RCtrl, 2=Keset A, 3=Keyset B, 4+ are for real joysticks/pads
+	;
+	;Replace * with <DISABLED> to disable the automatic settings for the JoyPorts
+	If %gamefile% CONTAINS(*)
+		If Control = JoyPort2
+			Add_CLP( -joydev2 3)
+			If NumPlayers > 1
+				Add_CLP( -joydev1 2)
+			Else
+				Add_CLP( -joydev1 0)
+			End If
+			Set_INI_Value(1||C64||Mouse||0)
+		ElseIf Control = JoyPort1
+			Add_CLP( -joydev1 3)
+			If NumPlayers > 1
+				Add_CLP( -joydev2 2)
+			Else
+				Add_CLP( -joydev2 0)
+			End If
+			Set_INI_Value(1||C64||Mouse||0)
+		ElseIf Control = Mouse
+			;1351 Mouse emulation (the Port cannot be changed or determined via the GUI)
+			Set_INI_Value(1||C64||Mouse||1)
+			Set_INI_Value(1||C64||Mouseport||1)
+			Add_CLP( -joydev1 0)
+			Add_CLP( -joydev2 0)
+		ElseIf Control = PaddlePort1
+			;Mouse PORT1 setting may give partial PaddlePort1 control
+			Set_INI_Value(1||C64||Mouse||1)
+			Set_INI_Value(1||C64||Mouseport||1)
+			Add_CLP( -joydev1 0)
+			Add_CLP( -joydev2 0)
+		ElseIf Control = PaddlePort2
+			;Mouse PORT2 setting may give partial PaddlePort2 control
+			Set_INI_Value(1||C64||Mouse||1)
+			Set_INI_Value(1||C64||Mouseport||2)
+			Add_CLP( -joydev1 0)
+			Add_CLP( -joydev2 0)
+		Else
+			;Disable Joysticks and Mouse
+			Add_CLP( -joydev1 0)
+			Add_CLP( -joydev2 0)
+			Set_INI_Value(1||C64||Mouse||0)
+		End If
+	End If
+
+	;REU (Ram Expansion Unit) = 128,256,512,1024,2048,4086,8192 or 16384 kB
+	If Key_reu CONTAINS(*)
+		;enable REU and set to reu value
+		If Key_reu CONTAINS(128||256||512||1024||2048||4096||8192||16384)
+			Set_INI_Value(1||C64||REUsize||%reu_value%)
+			Set_INI_Value(1||C64||REU||1)
+		ElseIf Key_reu CONTAINS(no||no*||off||false||0)
+			;disable REU if set to off
+			Set_INI_Value(1||C64||REU||0)
+		Else
+			;set to 512 kB for all other REU values (on, yes, 500, etc.)
+			Set_INI_Value(1||C64||REUsize||512)
+			Set_INI_Value(1||C64||REU||1)
+		End If
+	Else
+		;disable REU
+		Set_INI_Value(1||C64||REU||0)
+	End If
+
+	;unsupported game controls
+	If Control = Lightpen
+		Show_Message(This emulator does not have LightPen emulation.%crlfx2%This game may be uncontrollable/unplayable.)
+	ElseIf Control = KoalaPad
+		Show_Message(This emulator does not have KoalaPad emulation.%crlfx2%This game may be uncontrollable/unplayable.)
+	ElseIf Control = LightGun
+		Show_Message(This emulator does not have LightGun emulation.%crlfx2%This game may be uncontrollable/unplayable.)
+	ElseIf Control = PaddlePort1
+		Show_Message(This emulator does not have Paddle emulation.%crlfx2%Mouse Port1 setting may allow partial control via the mouse.%crlfx2%This game may still be uncontrollable/unplayable.)
+	ElseIf Control = PaddlePort2
+		Show_Message(This emulator does not have Paddle emulation.%crlfx2%Mouse Port2 setting may allow partial control via the mouse.%crlfx2%This game may still be uncontrollable/unplayable.)
+	End If
+
+	;give the user a warning message?
+	If VersionComment CONTAINS(*use C64S*||*use CCS*||*use real C64*)
+		Show_Message(This game may not work properly with this emulator.%crlfx2%See Version Comment for more info.)
+	End If
+	If VersionComment CONTAINS(*not 100%*||*not working*||*doesn't work*)
+		Show_Message(This game may not work properly.)
+	End If
+	If VersionComment CONTAINS(*PET Emulator*)
+		Show_Message(Use PET Emulator to run this game.)
+	End If
+	If VersionComment CONTAINS(*ATTN:*||*NOTE:*||*ATTN!:*||*NOTE!:*)
+		;point out that critical info is in the version comment
+		Show_Message(Read this game's Version Comments for very important information/instructions.)
+	End If
+	If VersionComment CONTAINS(*VIC-20*||*VIC20*)
+		If VersionComment CONTAINS(*emulator*)
+			Show_Message(Use VIC-20 column Emulator to run this game properly.)
+		End If
+	End If
+
+	;show message for the user
+	If Key_msg CONTAINS(*)
+		Show_Message(%msg_value%)
+	End If
+
+	;run the emulator
+	Run_Emulator()
+
+Else
+
+	;invalid game file type
+	Show_Message(GAME_NOT_SUPPORTED%crlfx2%Supported types: D64, T64, G64/G41, TAP, CRT, P00, PRG, LNX)
+
+End If
+
