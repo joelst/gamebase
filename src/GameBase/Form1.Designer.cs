@@ -26,12 +26,32 @@ partial class Form1
     ///  Required method for Designer support - do not modify
     ///  the contents of this method with the code editor.
     /// </summary>
+    private Button btnOptions;
+
     private void InitializeComponent()
     {
-        components = new System.ComponentModel.Container();
+        btnOptions = new Button();
+        SuspendLayout();
+        // 
+        // btnOptions
+        // 
+        btnOptions.Location = new Point(12, 12);
+        btnOptions.Name = "btnOptions";
+        btnOptions.Size = new Size(120, 23);
+        btnOptions.TabIndex = 0;
+        btnOptions.Text = "Options";
+        btnOptions.UseVisualStyleBackColor = true;
+        btnOptions.Click += btnOptions_Click;
+        // 
+        // Form1
+        // 
+        AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(800, 450);
-        Text = "Form1";
+        Controls.Add(btnOptions);
+        Name = "Form1";
+        Text = "GameBase";
+        ResumeLayout(false);
     }
 
     #endregion
