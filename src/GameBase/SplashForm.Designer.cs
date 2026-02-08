@@ -33,17 +33,6 @@ partial class SplashForm
     picLogo.SizeMode = PictureBoxSizeMode.CenterImage;
     picLogo.TabIndex = 0;
     picLogo.TabStop = false;
-    
-    // Load embedded GIF resource
-    var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-    var resourceName = "GameBase.GameBase.gif";
-    using (var stream = assembly.GetManifestResourceStream(resourceName))
-    {
-      if (stream != null)
-      {
-        picLogo.Image = Image.FromStream(stream);
-      }
-    }
     //
     // lblStatus
     //
