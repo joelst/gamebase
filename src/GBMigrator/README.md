@@ -30,14 +30,35 @@ Download and install the **Microsoft Access Database Engine 2016 Redistributable
 
 ## Usage
 
+### Access to SQLite Migration
+
 ```bash
 GBMigrator <access-db-path> <sqlite-db-path>
 ```
 
-### Example
+Example:
+
 ```bash
 GBMigrator C:\GameBase\GameBase.mdb C:\Users\YourName\AppData\Roaming\GameBase\Data\GameBase.db
 ```
+
+### Diff Utility (SQLite)
+
+```bash
+GBMigrator diff <current-db> <backup-db> [output-db] [--letters <letters>]
+```
+
+Examples:
+
+```bash
+GBMigrator diff C:\GameBase\Current.db C:\GameBase\Backup.db
+GBMigrator diff Current.db Backup.db update.db --letters A,B,C,0-9
+```
+
+Letters:
+- Use `A-Z` to restrict by starting letter.
+- Use `0-9` to include non-letter names.
+- If omitted, all letters and `0-9` are included.
 
 ## What Gets Migrated
 
@@ -71,6 +92,12 @@ dotnet build
 
 ```bash
 dotnet run --project src/GBMigrator/GBMigrator.csproj -- "path/to/source.mdb" "path/to/target.db"
+```
+
+Run the diff tool from source:
+
+```bash
+dotnet run --project src/GBMigrator/GBMigrator.csproj -- diff "path/to/current.db" "path/to/backup.db" "path/to/update.db"
 ```
 
 ## Troubleshooting

@@ -12,14 +12,22 @@
 using System.Runtime.InteropServices;
 using GBMigrator;
 
+if (args.Length == 0 || args[0].Equals("--help", StringComparison.OrdinalIgnoreCase) || args[0].Equals("-h", StringComparison.OrdinalIgnoreCase))
+{
+  PrintUsage();
+  return 1;
+}
+
+if (args[0].Equals("diff", StringComparison.OrdinalIgnoreCase))
+{
+  return await SqliteDiffTool.RunAsync(args.Skip(1).ToArray());
+}
+
 if (args.Length < 2)
 {
-  Console.WriteLine("GameBase Access to SQLite Migrator");
+  Console.Error.WriteLine("Error: Missing required arguments for migration.");
   Console.WriteLine();
-  Console.WriteLine("Usage: GBMigrator <access-db-path> <sqlite-db-path>");
-  Console.WriteLine();
-  Console.WriteLine("Example:");
-  Console.WriteLine("  GBMigrator C:\\GameBase\\GameBase.mdb C:\\GameBase\\GameBase.db");
+  PrintUsage();
   return 1;
 }
 
@@ -49,7 +57,7 @@ if (File.Exists(sqlitePath))
   Console.Write($"Target database already exists: {sqlitePath}");
   Console.Write("\nOverwrite? (y/N): ");
   string? response = Console.ReadLine();
-  if (response?.Trim().ToLowerInvariant() != "y")
+  if (!string.Equals(response?.Trim(), "y", StringComparison.OrdinalIgnoreCase))
   {
     Console.WriteLine("Migration cancelled.");
     return 0;
@@ -91,4 +99,19 @@ catch (Exception ex)
   Console.Error.WriteLine("Stack trace:");
   Console.Error.WriteLine(ex.StackTrace);
   return 1;
+}
+
+static void PrintUsage()
+{
+  Console.WriteLine("GBMigrator - GameBase utilities");
+  Console.WriteLine();
+  Console.WriteLine("Access to SQLite migration:");
+  Console.WriteLine("  GBMigrator <access-db-path> <sqlite-db-path>");
+  Console.WriteLine();
+  Console.WriteLine("Diff utility (SQLite):");
+  Console.WriteLine("  GBMigrator diff <current-db> <backup-db> [output-db] [--letters <letters>]");
+  Console.WriteLine();
+  Console.WriteLine("Examples:");
+  Console.WriteLine("  GBMigrator C:\\GameBase\\GameBase.mdb C:\\GameBase\\GameBase.db");
+  Console.WriteLine("  GBMigrator diff Current.db Backup.db update.db --letters A,B,C,0-9");
 }

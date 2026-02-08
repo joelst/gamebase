@@ -1,51 +1,44 @@
-DIFF.EXE (c) v0.9b 1997-2002 James Burrows
+GameBase Diff Utility (.NET)
+=============================
 
-This program is used for comparing two GameBase databases and reporting the 'DIFF'erences between them.
+This tool compares two GameBase SQLite databases and writes an update database containing
+only the changed or newly added games. The update database can be shared with the
+database maintainer to merge your updates.
 
-DIFF should be used by people who want to help collect game information and submit it to a database maintainer or team so that they can merge your collected info into a master database.
+The .NET diff utility is implemented as a subcommand of GBMigrator.
 
-For example, DIFF was the tool used by members of the GameBase64 team when compiling the GameBase Collection of C64 Games.  Each member in the team collected game info, then submitted it to the master GB64 database for inclusion.
+USAGE
+-----
 
-DIFF will collect all changed games and any added games.
+GBMigrator diff <current-db> <backup-db> [output-db] [--letters <letters>]
 
-Currently DIFF scans and reports changes to the following fields: -
+Examples:
+  GBMigrator diff C:\GameBase\Current.db C:\GameBase\Backup.db
+  GBMigrator diff Current.db Backup.db update.db --letters A,B,C,0-9
 
-Game Name, Publisher, Year, Musician, Programmer, Language, Cracker, Genre, Number of Players, Simultaneous flag, Game Comment, Number of Trainers, Game Length, True Drive Emulation flag, HighScore Saver flag, Loading Screen flag, Included Docs flag, PalNTSC setting, Version Comment, Game Filename, Game-File CRC-32 value, File To Run within game file (if compressed game file), Filename Index, Picture Filename, Music Filename, Adult Game flag, Game Notes (key=value pairs), Prequel Link, Sequel Link, Related Link, Game Control Method
+Letters:
+- Use A-Z to restrict by starting letter.
+- Use 0-9 to include non-letter names.
+- If omitted, all letters and 0-9 are included.
 
-The master database tool for merging DIFF databases is called BAC (Borg Assimilation Console) and is available (with VB6 source code) from the GameBase website.
-
-The VB6 source code for DIFF is included in the DIFF distribution zip file for those who want to tinker.
-
-============
 INSTRUCTIONS
-============
-
-It's very simple to use DIFF to collect and submit info: -
+------------
 
 1) Get an up-to-date database from the database maintainer.
 
-2) Make a backup of it (use a name like backup.mdb)
+2) Make a backup of it (use a name like Backup.db).
 
 3) Use the up-to-date database (not the backup) to collect the game info.
 
-4) When you wish to submit your database changes, Run DIFF and do the following: -
+4) When you wish to submit your database changes, run the diff tool:
 
- - First select your current changed database (from step 3)
+   - First select your current changed database
+   - Then select the original backed up database
+   - Pick the letters that you have changed (if you are not sure, select all)
+   - Run the command and follow the prompts to enter your name, email, database name, and notes
+   - Send the generated update.db to the database maintainer
 
- - Then select the original backed up database (from step 2)
+5) Replace your backup database with the current database after submitting
+   (the tool can do this for you when it finishes).
 
- - Pick the letters that you have changed (if you are not sure, select all)
-
- - Click START
-
- - When finished, enter your name, email-address, database-name and any notes you wish to add, then send the update.mdb to the database maintainer!
-
- - Remember to replace your backup database with the current changed one after you have submitted your update.mdb database to the database maintainer, otherwise you might submit the same info more than once if you continue to collect game info!
-
-
-Any problems, email gamebase@itsa.me.uk
-
-
-Regards
-James Burrows
-
+If you need the legacy VB6 Diff utility, see the Source/Diff folder history.

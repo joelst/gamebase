@@ -212,8 +212,8 @@ Files:      Text.ini (included as #101 in GAMEBASE.RES)
 			credits.ini (included as #104 in GAMEBASE.RES)
 
 
-Diff.vbp/.exe
-=============
+Diff (GBMigrator diff)
+======================
 Diff is a tool for logging all changes made between two databases,
 so that the changes it has logged may be imported into a master
 database by the corresponding BAC utility (Borg Assimilation
@@ -221,15 +221,15 @@ Console - see below)
 
 Dependencies: -
 
-References: dao360.dll (Microsoft Data Access Objects 3.6)
-Components: comdlg32.ocx, mscomctl.ocx, tabctl32.ocx (MS ActiveX)
-Files:      update.mdb
+References: Microsoft.Data.Sqlite (via .NET)
+Components: None
+Files:      update.db
 
 
 BAC.vbp/.exe [UNFINISHED - NOT FULLY WORKING]
 =============================================
 This utility is meant to take 'diff' databases created with the
-Diff.exe utility, and merge them into a master database.  This is
+Diff utility, and merge them into a master database.  This is
 currently unfinished and is not fully working yet.  If anyone
 wants to work on GB... then I guess this is the component that is
 needed most!
