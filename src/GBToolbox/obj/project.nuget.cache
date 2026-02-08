@@ -1,8 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "meVohN+t4z4=",
+  "dgSpecHash": "488ZpV1MSqs=",
   "success": true,
   "projectFilePath": "F:\\git\\gamebase\\src\\GBToolbox\\GBToolbox.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\joels\\.nuget\\packages\\microsoft.data.sqlite\\10.0.2\\microsoft.data.sqlite.10.0.2.nupkg.sha512",
+    "C:\\Users\\joels\\.nuget\\packages\\microsoft.data.sqlite.core\\10.0.2\\microsoft.data.sqlite.core.10.0.2.nupkg.sha512",
+    "C:\\Users\\joels\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.11\\sqlitepclraw.bundle_e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\joels\\.nuget\\packages\\sqlitepclraw.core\\2.1.11\\sqlitepclraw.core.2.1.11.nupkg.sha512",
+    "C:\\Users\\joels\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.11\\sqlitepclraw.lib.e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\joels\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.11\\sqlitepclraw.provider.e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\joels\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512"
+  ],
   "logs": []
 }
