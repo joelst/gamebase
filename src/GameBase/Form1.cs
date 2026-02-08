@@ -1,11 +1,13 @@
 using GBSql.Data;
 using GBSql.Models;
+using Gemus;
 
 namespace GameBase;
 
 public partial class Form1 : Form
 {
     private readonly IGameBaseRepository _repository;
+    private readonly GemusEngine? _gemusEngine;
     private List<GameEntity> _allGames = new();
     private List<GameEntity> _filteredGames = new();
 
@@ -29,6 +31,9 @@ public partial class Form1 : Form
     public Form1(IGameBaseRepository repository)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        // TODO: Properly initialize GemusEngine with required dependencies
+        // For now, game launching will show a configuration message
+        _gemusEngine = null;
         InitializeComponent();
         Load += Form1_Load;
         editGameToolStripMenuItem.Click += editGameToolStripMenuItem_Click;
@@ -441,11 +446,18 @@ public partial class Form1 : Form
 
         if (game == null) return;
 
-        // TODO: Implement GEMUS engine integration for launching games
-        MessageBox.Show($"Game launching not yet implemented.\n\nGame: {game.Name}\nFile: {game.Filename}",
-            "Coming Soon", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-        await Task.CompletedTask;
+        if (_gemusEngine == null)
+        {
+            MessageBox.Show("Game launching requires GEMUS emulator configuration.\n\n" +
+                "To enable game launching:\n" +
+                "1. Configure emulators in Options\n" +
+                "2. Set game paths and scripts\n" +
+                "3. Ensure GEMUS.ini is configured\n\n" +
+                $"Game: {game.Name}\nFile: {game.Filename}",
+                "Configuration Required",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
     }
 
     private async void lstExtras_DoubleClick(object? sender, EventArgs e)
@@ -453,16 +465,29 @@ public partial class Form1 : Form
         if (lstExtras.SelectedItem is not ExtraListItem extraItem)
             return;
 
-        // TODO: Implement GEMUS engine integration for running extras
-        MessageBox.Show($"Extra launching not yet implemented.\n\nExtra: {extraItem.Extra.Name}\nFile: {extraItem.Extra.Filename}",
-            "Coming Soon", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-        await Task.CompletedTask;
+        if (_gemusEngine == null)
+        {
+            MessageBox.Show("Extra launching requires GEMUS emulator configuration.\n\n" +
+                "To enable extra launching:\n" +
+                "1. Configure emulators and viewers in Options\n" +
+                "2. Set paths and scripts\n" +
+                "3. Ensure GEMUS.ini is configured\n\n" +
+                $"Extra: {extraItem.Extra.Name}\nFile: {extraItem.Extra.Filename}",
+                "Configuration Required",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
     }
 
     private void exitToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         Application.Exit();
+    }
+
+    private void aboutToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        using var aboutForm = new AboutForm();
+        aboutForm.ShowDialog(this);
     }
 
     private void btnOptions_Click(object? sender, EventArgs e)

@@ -83,7 +83,9 @@ namespace GameBase
           GemusIniHelper.WriteIniValue("Settings", "DatabasePath", dbPath, gemusIni);
         }
 
+        DialogResult = DialogResult.OK;
         MessageBox.Show(this, $"Saved settings to {gemusIni}", "Options", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        Close();
       }
       catch (Exception ex)
       {

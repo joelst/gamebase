@@ -215,6 +215,7 @@ partial class Form1
         aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
         aboutToolStripMenuItem.Size = new Size(116, 22);
         aboutToolStripMenuItem.Text = "&About...";
+        aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
         //
         // btnOptions
         //
