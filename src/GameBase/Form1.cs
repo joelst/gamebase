@@ -30,6 +30,7 @@ public partial class Form1 : Form
         Load += Form1_Load;
         editGameToolStripMenuItem.Click += editGameToolStripMenuItem_Click;
         manageExtrasToolStripMenuItem.Click += manageExtrasToolStripMenuItem_Click;
+        picScreenshot.DoubleClick += picScreenshot_DoubleClick;
     }
 
     private async void Form1_Load(object? sender, EventArgs e)
@@ -265,6 +266,18 @@ public partial class Form1 : Form
         if (game == null) return;
 
         using var dlg = new ExtrasEditorForm(_repository, game.GA_Id, game.Name);
+        dlg.ShowDialog(this);
+    }
+
+    private void picScreenshot_DoubleClick(object? sender, EventArgs e)
+    {
+        if (picScreenshot.Image == null)
+        {
+            MessageBox.Show(this, "No screenshot loaded.", "Screenshot", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        using var dlg = new BigScreenshotForm(picScreenshot.Image);
         dlg.ShowDialog(this);
     }
 
