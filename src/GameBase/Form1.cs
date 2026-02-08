@@ -23,6 +23,9 @@ public partial class Form1 : Form
     private readonly Dictionary<int, string> _difficulty = new();
     private readonly Dictionary<int, string> _crackers = new();
 
+    private List<CustomViewForm.FilterCondition> _customFilters = new();
+    private bool _customMatchAny;
+
     public Form1(IGameBaseRepository repository)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -225,6 +228,68 @@ public partial class Form1 : Form
                 )
                 .ToList();
         }
+
+        UpdateGameGrid();
+    }
+
+    private void customViewsToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        using var dlg = new CustomViewForm(_customFilters, _customMatchAny);
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+            _customFilters = dlg.Filters.ToList();
+            _customMatchAny = dlg.MatchAny;
+            ApplyCustomFilters();
+        }
+    }
+
+    private void ApplyCustomFilters()
+    {
+        if (_customFilters.Count == 0)
+        {
+            _filteredGames = new List<GameEntity>(_allGames);
+            UpdateGameGrid();
+            return;
+        }
+
+        Func<GameEntity, CustomViewForm.FilterCondition, bool> match = (g, f) =>
+        {
+            string val = f.Field switch
+            {
+                "Title" => g.Name ?? string.Empty,
+                "Publisher" => Resolve(_publishers, g.PU_Id),
+                "Programmer" => Resolve(_programmers, g.PR_Id),
+                "Musician" => Resolve(_musicians, g.MU_Id),
+                "Language" => Resolve(_languages, g.LA_Id),
+                "Genre" => Resolve(_genres, g.GE_Id),
+                "Year" => Resolve(_years, g.YE_Id),
+                "Comment" => g.Comment ?? string.Empty,
+                "Favorite" => g.Fav.ToString(),
+                "Adult" => g.Adult.ToString(),
+                _ => string.Empty
+            };
+
+            string value = f.Value ?? string.Empty;
+            return f.Operator switch
+            {
+                "Contains" => val.Contains(value, StringComparison.OrdinalIgnoreCase),
+                "Equals" => string.Equals(val, value, StringComparison.OrdinalIgnoreCase),
+                "NotEquals" => !string.Equals(val, value, StringComparison.OrdinalIgnoreCase),
+                "StartsWith" => val.StartsWith(value, StringComparison.OrdinalIgnoreCase),
+                "EndsWith" => val.EndsWith(value, StringComparison.OrdinalIgnoreCase),
+                "GreaterThan" => int.TryParse(val, out var vi) && int.TryParse(value, out var v2) && vi > v2,
+                "LessThan" => int.TryParse(val, out var vi2) && int.TryParse(value, out var v22) && vi2 < v22,
+                "IsEmpty" => string.IsNullOrWhiteSpace(val),
+                "IsNotEmpty" => !string.IsNullOrWhiteSpace(val),
+                _ => false
+            };
+        };
+
+        _filteredGames = _allGames.Where(g =>
+        {
+            var results = _customFilters.Select(f => match(g, f));
+            return _customMatchAny ? results.Any(r => r) : results.All(r => r);
+        }).ToList();
 
         UpdateGameGrid();
     }
