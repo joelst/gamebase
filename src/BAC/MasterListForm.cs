@@ -1,4 +1,3 @@
-using GBFuncs;
 using Microsoft.Data.Sqlite;
 
 namespace BAC;

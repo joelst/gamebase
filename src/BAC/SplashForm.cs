@@ -5,7 +5,7 @@ namespace BAC;
 /// </summary>
 public partial class SplashForm : Form
 {
-  private Timer? _timer;
+  private System.Windows.Forms.Timer? _timer;
   private readonly DateTime _startTime;
 
   public SplashForm()
@@ -17,10 +17,8 @@ public partial class SplashForm : Form
   private void SplashForm_Load(object? sender, EventArgs e)
   {
     // Show splash for 1.75 seconds minimum
-    _timer = new Timer
-    {
-      Interval = 100 // Check every 100ms
-    };
+    _timer = new System.Windows.Forms.Timer();
+    _timer.Interval = 100; // Check every 100ms
     _timer.Tick += Timer_Tick;
     _timer.Start();
   }

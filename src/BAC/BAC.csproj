@@ -6,7 +6,6 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ApplicationIcon>bac.ico</ApplicationIcon>
     <AssemblyName>BAC</AssemblyName>
     <RootNamespace>BAC</RootNamespace>
   </PropertyGroup>

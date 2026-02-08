@@ -1,4 +1,3 @@
-using GBFuncs;
 using Microsoft.Data.Sqlite;
 
 namespace BAC;
@@ -9,7 +8,6 @@ namespace BAC;
 public partial class MainForm : Form
 {
   private readonly RegistryHelper _registry;
-  private readonly FileHelper _fileHelper;
 
   private SqliteConnection? _masterConnection;
   private SqliteConnection? _diffConnection;
@@ -24,7 +22,6 @@ public partial class MainForm : Form
   {
     InitializeComponent();
     _registry = new RegistryHelper();
-    _fileHelper = new FileHelper();
   }
 
   private void MainForm_Load(object sender, EventArgs e)
