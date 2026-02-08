@@ -9,6 +9,7 @@
 //   GBMigrator: CLI Entry Point
 //==============================================
 
+using System.Runtime.InteropServices;
 using GBMigrator;
 
 if (args.Length < 2)
@@ -19,6 +20,18 @@ if (args.Length < 2)
   Console.WriteLine();
   Console.WriteLine("Example:");
   Console.WriteLine("  GBMigrator C:\\GameBase\\GameBase.mdb C:\\GameBase\\GameBase.db");
+  return 1;
+}
+
+// Check platform first
+if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+{
+  Console.Error.WriteLine("Error: GBMigrator requires Windows to access Microsoft Access databases.");
+  Console.Error.WriteLine("The OleDb provider for Access (.mdb) files is only available on Windows.");
+  Console.Error.WriteLine();
+  Console.Error.WriteLine("To migrate on non-Windows systems:");
+  Console.Error.WriteLine("  1. Run GBMigrator on a Windows machine first");
+  Console.Error.WriteLine("  2. Copy the resulting .db file to your target system");
   return 1;
 }
 
@@ -54,10 +67,28 @@ try
   Console.WriteLine("Migration completed successfully!");
   return 0;
 }
+catch (InvalidOperationException ex) when (ex.Message.Contains("provider") || ex.Message.Contains("Provider"))
+{
+  Console.Error.WriteLine();
+  Console.Error.WriteLine("Error: Microsoft Access Database Engine not found.");
+  Console.Error.WriteLine();
+  Console.Error.WriteLine("Please install the Microsoft Access Database Engine:");
+  Console.Error.WriteLine("  - Download: https://www.microsoft.com/en-us/download/details.aspx?id=54920");
+  Console.Error.WriteLine("  - Install the version matching your .NET runtime (x64 or x86)");
+  Console.Error.WriteLine();
+  Console.Error.WriteLine($"Technical details: {ex.Message}");
+  return 1;
+}
 catch (Exception ex)
 {
   Console.Error.WriteLine();
   Console.Error.WriteLine($"Migration failed: {ex.Message}");
+  if (ex.InnerException != null)
+  {
+    Console.Error.WriteLine($"Inner error: {ex.InnerException.Message}");
+  }
+  Console.Error.WriteLine();
+  Console.Error.WriteLine("Stack trace:");
   Console.Error.WriteLine(ex.StackTrace);
   return 1;
 }

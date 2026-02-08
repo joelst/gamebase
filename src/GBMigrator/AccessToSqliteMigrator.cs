@@ -44,6 +44,9 @@ public class AccessToSqliteMigrator
     if (!File.Exists(_accessDbPath))
       throw new FileNotFoundException($"Access database not found: {_accessDbPath}");
 
+    // Validate OleDb provider is available before proceeding
+    ValidateOleDbProvider();
+
     // Initialize SQLite database with schema
     ReportProgress("Initializing SQLite database...");
     var context = new GameBaseSqliteContext(_sqliteDbPath);
@@ -273,6 +276,31 @@ public class AccessToSqliteMigrator
   private static string? GetStringOrNull(IDataReader reader, int ordinal)
   {
     return reader.IsDBNull(ordinal) ? null : reader.GetString(ordinal);
+  }
+
+  private void ValidateOleDbProvider()
+  {
+    try
+    {
+      // Test if the provider is available by trying to create a connection
+      using var testConn = new OleDbConnection(GetAccessConnectionString());
+      // We don't need to open it, just creating it will validate the provider exists
+    }
+    catch (InvalidOperationException ex) when (ex.Message.Contains("provider") || ex.Message.Contains("Provider"))
+    {
+      throw new InvalidOperationException(
+        "The Microsoft Access Database Engine (OleDb provider) is not installed or not available. " +
+        "Please install the Microsoft Access Database Engine 2016 Redistributable from " +
+        "https://www.microsoft.com/en-us/download/details.aspx?id=54920",
+        ex);
+    }
+    catch (ArgumentException ex) when (ex.Message.Contains("provider") || ex.Message.Contains("Provider"))
+    {
+      throw new InvalidOperationException(
+        "The OleDb provider for Microsoft Access is not registered on this system. " +
+        "Please install the Microsoft Access Database Engine.",
+        ex);
+    }
   }
 
   private void ReportProgress(string message)

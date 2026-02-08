@@ -4,8 +4,17 @@
 Command-line utility to migrate GameBase data from Microsoft Access (.mdb) to SQLite databases.
 
 ## Requirements
-- .NET 8.0 Runtime (Windows)
+- **.NET 8.0 Runtime** (Windows only)
+- **Windows OS** - Required for OleDb Access database provider
 - **Microsoft Access Database Engine** (2016 or later) or **Microsoft Jet 4.0 OLEDB Provider**
+
+⚠️ **Platform Limitation**: This tool can only run on Windows because the OleDb provider for Microsoft Access databases is Windows-only.
+
+### For Non-Windows Users
+If you need to use GameBase on Linux or macOS:
+1. Run GBMigrator on a Windows machine first to convert your Access database to SQLite
+2. Copy the resulting `.db` file to your target system
+3. Use the GameBase application with the SQLite database (cross-platform compatible)
 
 ### Installing Access Database Engine
 If you get an error like:
@@ -45,11 +54,11 @@ The tool migrates the following tables:
 
 ## Features
 
-✅ **Preserves IDs** - All primary keys and foreign keys are maintained  
-✅ **Progress reporting** - Real-time console output  
-✅ **Schema detection** - Skips missing tables gracefully  
-✅ **Overwrite protection** - Prompts before replacing existing SQLite database  
-✅ **Null handling** - Correctly handles nullable fields from Access  
+✅ **Preserves IDs** - All primary keys and foreign keys are maintained
+✅ **Progress reporting** - Real-time console output
+✅ **Schema detection** - Skips missing tables gracefully
+✅ **Overwrite protection** - Prompts before replacing existing SQLite database
+✅ **Null handling** - Correctly handles nullable fields from Access
 
 ## Build from Source
 
@@ -65,6 +74,18 @@ dotnet run --project src/GBMigrator/GBMigrator.csproj -- "path/to/source.mdb" "p
 ```
 
 ## Troubleshooting
+
+### "GBMigrator requires Windows to access Microsoft Access databases"
+This tool can only run on Windows. The OleDb provider for Access files is not available on other platforms.
+
+**Solution**: Run the migration on a Windows machine, then copy the resulting `.db` file to your target system.
+
+### "Microsoft Access Database Engine not found"
+The required OleDb provider is not installed.
+
+**Solution**: Install the Microsoft Access Database Engine 2016 Redistributable:
+- Download: https://www.microsoft.com/en-us/download/details.aspx?id=54920
+- Install the version matching your system architecture (x64 or x86)
 
 ### "Cannot open a database created with a previous version"
 The .mdb file format is incompatible. Try:
