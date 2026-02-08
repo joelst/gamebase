@@ -121,6 +121,8 @@ partial class Form1
         // viewToolStripMenuItem
         //
         viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customViewsToolStripMenuItem });
+        viewToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+        viewToolStripMenuItem.DropDownItems.Add(new ToolStripMenuItem("Quick &Filter...", null, quickFilterToolStripMenuItem_Click));
         viewToolStripMenuItem.Name = "viewToolStripMenuItem";
         viewToolStripMenuItem.Size = new Size(44, 20);
         viewToolStripMenuItem.Text = "&View";

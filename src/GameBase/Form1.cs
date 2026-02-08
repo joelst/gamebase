@@ -221,10 +221,11 @@ public partial class Form1 : Form
         {
             _filteredGames = _allGames
                 .Where(g =>
-                    (g.Name?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                    (_publishers.TryGetValue(g.PU_Id ?? -1, out var pub) && pub.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
-                    (_programmers.TryGetValue(g.PR_Id ?? -1, out var prog) && prog.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
-                    (_genres.TryGetValue(g.GE_Id ?? -1, out var gen) && gen.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                    Contains(g.Name, searchText) ||
+                    Contains(Resolve(_publishers, g.PU_Id), searchText) ||
+                    Contains(Resolve(_programmers, g.PR_Id), searchText) ||
+                    Contains(Resolve(_genres, g.GE_Id), searchText) ||
+                    Contains(g.Comment, searchText)
                 )
                 .ToList();
         }
@@ -239,6 +240,25 @@ public partial class Form1 : Form
         {
             _customFilters = dlg.Filters.ToList();
             _customMatchAny = dlg.MatchAny;
+            ApplyCustomFilters();
+        }
+    }
+
+    private void quickFilterToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        using var dlg = new QuickFilterForm();
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+            _customFilters = new List<CustomViewForm.FilterCondition>
+            {
+                new CustomViewForm.FilterCondition
+                {
+                    Field = dlg.SelectedField,
+                    Operator = "Contains",
+                    Value = dlg.FilterText
+                }
+            };
+            _customMatchAny = false;
             ApplyCustomFilters();
         }
     }
@@ -401,6 +421,9 @@ public partial class Form1 : Form
 
     private static string Resolve(Dictionary<int, string> map, int? id)
         => id.HasValue && map.TryGetValue(id.Value, out var name) ? name : string.Empty;
+
+    private static bool Contains(string? target, string text)
+        => target?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false;
 
     // Helper class for displaying extras in ListBox
     private class ExtraListItem
