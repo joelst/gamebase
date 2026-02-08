@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Gemus;
 
 namespace GameBase
@@ -180,10 +181,24 @@ namespace GameBase
 
         Directory.CreateDirectory(Path.GetDirectoryName(emulatorsIni)!);
 
-        // Create a minimal default Emulators.ini
-        var content = @"[Emulator0]
-Name=Default Emulator
-Path=
+        string defaultPath = string.Empty;
+        string defaultName = "VICE";
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+          defaultPath = @"C:\Program Files\WinVICE-3.7\x64sc.exe";
+          defaultName = "VICE (Windows)";
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+          defaultPath = "/Applications/VICE.app/Contents/MacOS/x64sc";
+          defaultName = "VICE (macOS)";
+        }
+
+        // Create a default Emulators.ini with VICE placeholders
+        var content = $@"[Emulator0]
+Name={defaultName}
+Path={defaultPath}
 Params=
 Directory=
 FileTypes=d64;t64;prg;zip

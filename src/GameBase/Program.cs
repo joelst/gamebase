@@ -15,8 +15,21 @@ static class Program
         // see https://aka.ms/applicationconfiguration.
         ApplicationConfiguration.Initialize();
 
+        using var splash = new SplashForm();
+        splash.Show();
+        splash.Refresh();
+
         var repo = CreateRepository();
-        Application.Run(new Form1(repo));
+        var mainForm = new Form1(repo);
+        mainForm.DataLoaded += (_, _) =>
+        {
+            if (!splash.IsDisposed)
+            {
+                splash.Close();
+            }
+        };
+
+        Application.Run(mainForm);
     }
 
     private static GameBaseSqliteRepository CreateRepository()

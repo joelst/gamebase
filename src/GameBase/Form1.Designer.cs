@@ -48,9 +48,13 @@ partial class Form1
     private ToolStripMenuItem editGameToolStripMenuItem;
     private ToolStripMenuItem manageExtrasToolStripMenuItem;
     private ToolStripSeparator toolStripSeparator1;
+    private ToolStripMenuItem batchEditToolStripMenuItem;
+    private ToolStripMenuItem verifyFilesToolStripMenuItem;
+    private ToolStripSeparator toolStripSeparator2;
     private ToolStripMenuItem customViewsToolStripMenuItem;
     private ToolStripMenuItem quickFilterToolStripMenuItem;
     private ToolStripMenuItem clearFiltersToolStripMenuItem;
+    private ToolStripMenuItem columnsToolStripMenuItem;
     private ToolStripMenuItem aboutToolStripMenuItem;
     private TextBox txtSearch;
     private Button btnClearFilters;
@@ -74,11 +78,15 @@ partial class Form1
         customViewsToolStripMenuItem = new ToolStripMenuItem();
         quickFilterToolStripMenuItem = new ToolStripMenuItem();
         clearFiltersToolStripMenuItem = new ToolStripMenuItem();
+        columnsToolStripMenuItem = new ToolStripMenuItem();
         gameToolStripMenuItem = new ToolStripMenuItem();
         playGameToolStripMenuItem = new ToolStripMenuItem();
         editGameToolStripMenuItem = new ToolStripMenuItem();
         manageExtrasToolStripMenuItem = new ToolStripMenuItem();
         toolStripSeparator1 = new ToolStripSeparator();
+        batchEditToolStripMenuItem = new ToolStripMenuItem();
+        verifyFilesToolStripMenuItem = new ToolStripMenuItem();
+        toolStripSeparator2 = new ToolStripSeparator();
         helpToolStripMenuItem = new ToolStripMenuItem();
         aboutToolStripMenuItem = new ToolStripMenuItem();
         btnOptions = new Button();
@@ -145,7 +153,7 @@ partial class Form1
         //
         // viewToolStripMenuItem
         //
-        viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customViewsToolStripMenuItem, quickFilterToolStripMenuItem, clearFiltersToolStripMenuItem });
+        viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customViewsToolStripMenuItem, quickFilterToolStripMenuItem, clearFiltersToolStripMenuItem, columnsToolStripMenuItem });
         viewToolStripMenuItem.Name = "viewToolStripMenuItem";
         viewToolStripMenuItem.Size = new Size(44, 20);
         viewToolStripMenuItem.Text = "&View";
@@ -170,9 +178,16 @@ partial class Form1
         clearFiltersToolStripMenuItem.Text = "Clear Filters";
         clearFiltersToolStripMenuItem.Click += clearFiltersToolStripMenuItem_Click;
         //
+        // columnsToolStripMenuItem
+        //
+        columnsToolStripMenuItem.Name = "columnsToolStripMenuItem";
+        columnsToolStripMenuItem.Size = new Size(180, 22);
+        columnsToolStripMenuItem.Text = "Columns...";
+        columnsToolStripMenuItem.Click += columnsToolStripMenuItem_Click;
+        //
         // gameToolStripMenuItem
         //
-        gameToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { playGameToolStripMenuItem, editGameToolStripMenuItem, manageExtrasToolStripMenuItem, toolStripSeparator1 });
+        gameToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { playGameToolStripMenuItem, editGameToolStripMenuItem, manageExtrasToolStripMenuItem, toolStripSeparator1, batchEditToolStripMenuItem, verifyFilesToolStripMenuItem, toolStripSeparator2 });
         gameToolStripMenuItem.Name = "gameToolStripMenuItem";
         gameToolStripMenuItem.Size = new Size(50, 20);
         gameToolStripMenuItem.Text = "&Game";
@@ -202,6 +217,25 @@ partial class Form1
         //
         toolStripSeparator1.Name = "toolStripSeparator1";
         toolStripSeparator1.Size = new Size(141, 6);
+        //
+        // batchEditToolStripMenuItem
+        //
+        batchEditToolStripMenuItem.Name = "batchEditToolStripMenuItem";
+        batchEditToolStripMenuItem.Size = new Size(144, 22);
+        batchEditToolStripMenuItem.Text = "&Batch Edit...";
+        batchEditToolStripMenuItem.Click += batchEditToolStripMenuItem_Click;
+        //
+        // verifyFilesToolStripMenuItem
+        //
+        verifyFilesToolStripMenuItem.Name = "verifyFilesToolStripMenuItem";
+        verifyFilesToolStripMenuItem.Size = new Size(144, 22);
+        verifyFilesToolStripMenuItem.Text = "&Verify Files...";
+        verifyFilesToolStripMenuItem.Click += verifyFilesToolStripMenuItem_Click;
+        //
+        // toolStripSeparator2
+        //
+        toolStripSeparator2.Name = "toolStripSeparator2";
+        toolStripSeparator2.Size = new Size(141, 6);
         //
         // helpToolStripMenuItem
         //
@@ -273,7 +307,7 @@ partial class Form1
         dgvGames.ContextMenuStrip = dgvContextMenu;
         dgvGames.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dgvGames.Location = new Point(3, 23);
-        dgvGames.MultiSelect = false;
+        dgvGames.MultiSelect = true;
         dgvGames.Name = "dgvGames";
         dgvGames.ReadOnly = true;
         dgvGames.RowHeadersVisible = false;

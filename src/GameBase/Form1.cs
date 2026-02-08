@@ -26,8 +26,12 @@ public partial class Form1 : Form
     private readonly Dictionary<int, string> _difficulty = new();
     private readonly Dictionary<int, string> _crackers = new();
 
+    private readonly Dictionary<string, bool> _columnVisibility = new();
+
     private List<CustomViewForm.FilterCondition> _customFilters = new();
     private bool _customMatchAny;
+
+    public event EventHandler? DataLoaded;
 
     public Form1(IGameBaseRepository repository)
     {
@@ -77,7 +81,14 @@ public partial class Form1 : Form
 
     private async void Form1_Load(object? sender, EventArgs e)
     {
-        await InitializeAsync();
+        try
+        {
+            await InitializeAsync();
+        }
+        finally
+        {
+            DataLoaded?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     private async Task InitializeAsync()
@@ -183,6 +194,8 @@ public partial class Form1 : Form
         // Auto-size columns
         dgvGames.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
+        ApplyColumnVisibility();
+
         if (selectedId.HasValue)
         {
             foreach (DataGridViewRow row in dgvGames.Rows)
@@ -198,6 +211,23 @@ public partial class Form1 : Form
 
         lblSearch.Text = $"Games ({_filteredGames.Count} of {_allGames.Count})";
         UpdateStatus();
+    }
+
+    private void ApplyColumnVisibility()
+    {
+        foreach (DataGridViewColumn column in dgvGames.Columns)
+        {
+            if (string.Equals(column.Name, "GA_Id", StringComparison.OrdinalIgnoreCase))
+            {
+                column.Visible = false;
+                continue;
+            }
+
+            if (_columnVisibility.TryGetValue(column.Name, out bool visible))
+            {
+                column.Visible = visible;
+            }
+        }
     }
 
     private void dgvGames_SelectionChanged(object? sender, EventArgs e)
@@ -504,22 +534,8 @@ public partial class Form1 : Form
         {
             lblStatus.Text = $"Launching {game.Name}...";
 
-            // Get base paths from configuration
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string basePathRoot = string.IsNullOrWhiteSpace(appData)
-                ? AppContext.BaseDirectory
-                : appData;
-            string basePath = Path.Combine(basePathRoot, "GameBase");
-            string gemusIni = Path.Combine(basePath, "Gemus.ini");
-
-            // Read configured paths or use defaults (Documents for games, AppData for config)
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string defaultGamesBase = string.IsNullOrWhiteSpace(documentsPath)
-                ? basePath
-                : Path.Combine(documentsPath, "GameBase");
-            string gamesPath = GemusIniHelper.GetIniMessage("Settings", "GamesPath",
-                Path.Combine(defaultGamesBase, "Games"), gemusIni);
-            string extractPath = Path.Combine(basePath, "Temp");
+            string gamesPath = GetConfiguredPath("GamesPath", "Games");
+            string extractPath = Path.Combine(GetAppDataBasePath(), "Temp");
 
             Directory.CreateDirectory(gamesPath);
             Directory.CreateDirectory(extractPath);
@@ -599,21 +615,8 @@ public partial class Form1 : Form
         {
             lblStatus.Text = $"Launching {extraItem.Extra.Name}...";
 
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string basePathRoot = string.IsNullOrWhiteSpace(appData)
-                ? AppContext.BaseDirectory
-                : appData;
-            string basePath = Path.Combine(basePathRoot, "GameBase");
-            string gemusIni = Path.Combine(basePath, "Gemus.ini");
-
-            // Read configured paths or use defaults (Documents for extras, AppData for config)
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string defaultExtrasBase = string.IsNullOrWhiteSpace(documentsPath)
-                ? basePath
-                : Path.Combine(documentsPath, "GameBase");
-            string extrasPath = GemusIniHelper.GetIniMessage("Settings", "ExtrasPath",
-                Path.Combine(defaultExtrasBase, "Extras"), gemusIni);
-            string extractPath = Path.Combine(basePath, "Temp");
+            string extrasPath = GetConfiguredPath("ExtrasPath", "Extras");
+            string extractPath = Path.Combine(GetAppDataBasePath(), "Temp");
 
             Directory.CreateDirectory(extrasPath);
             Directory.CreateDirectory(extractPath);
@@ -665,6 +668,156 @@ public partial class Form1 : Form
     private void exitToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         Application.Exit();
+    }
+
+    private void columnsToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (dgvGames.Columns.Count == 0)
+            return;
+
+        var columns = dgvGames.Columns.Cast<DataGridViewColumn>()
+            .Where(c => !string.Equals(c.Name, "GA_Id", StringComparison.OrdinalIgnoreCase))
+            .Select(c => (c.Name, c.Visible))
+            .ToList();
+
+        using var dlg = new ColumnsForm(columns);
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+            _columnVisibility.Clear();
+            foreach (var entry in dlg.ColumnVisibility)
+            {
+                _columnVisibility[entry.Key] = entry.Value;
+            }
+
+            ApplyColumnVisibility();
+        }
+    }
+
+    private async void batchEditToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (dgvGames.SelectedRows.Count == 0)
+        {
+            MessageBox.Show("Please select games to edit.", "No Selection",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var selectedIds = dgvGames.SelectedRows
+            .Cast<DataGridViewRow>()
+            .Select(r => (int)r.Cells["GA_Id"].Value)
+            .ToHashSet();
+
+        var selectedGames = _filteredGames
+            .Where(g => selectedIds.Contains(g.GA_Id))
+            .ToList();
+
+        if (selectedGames.Count == 0)
+            return;
+
+        using var dlg = new BatchEditForm(_publishers, _genres);
+        if (dlg.ShowDialog(this) != DialogResult.OK)
+            return;
+
+        foreach (var game in selectedGames)
+        {
+            if (dlg.SelectedPublisherId.HasValue)
+                game.PU_Id = dlg.SelectedPublisherId;
+            if (dlg.SelectedGenreId.HasValue)
+                game.GE_Id = dlg.SelectedGenreId;
+            if (dlg.SelectedFavorite.HasValue)
+                game.Fav = dlg.SelectedFavorite.Value;
+            if (dlg.SelectedClassic.HasValue)
+                game.Classic = dlg.SelectedClassic.Value;
+            if (dlg.SelectedAdult.HasValue)
+                game.Adult = dlg.SelectedAdult.Value;
+
+            await _repository.UpsertGameAsync(game);
+        }
+
+        UpdateGameGrid();
+        UpdateStatus($"Batch updated {selectedGames.Count} games");
+    }
+
+    private async void verifyFilesToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        UseWaitCursor = true;
+        try
+        {
+            var issues = await Task.Run(async () => await CollectMissingFilesAsync());
+            using var dlg = new VerifyFilesForm(issues);
+            dlg.ShowDialog(this);
+        }
+        finally
+        {
+            UseWaitCursor = false;
+        }
+    }
+
+    private async Task<List<VerifyFilesForm.FileIssue>> CollectMissingFilesAsync()
+    {
+        var issues = new List<VerifyFilesForm.FileIssue>();
+        string gamesPath = GetConfiguredPath("GamesPath", "Games");
+        string extrasPath = GetConfiguredPath("ExtrasPath", "Extras");
+
+        foreach (var game in _allGames)
+        {
+            if (string.IsNullOrWhiteSpace(game.Filename))
+            {
+                issues.Add(new VerifyFilesForm.FileIssue("Game", game.Name, string.Empty, "(missing filename)"));
+            }
+            else
+            {
+                string gameFile = Path.Combine(gamesPath, game.Filename);
+                if (!File.Exists(gameFile))
+                {
+                    issues.Add(new VerifyFilesForm.FileIssue("Game", game.Name, string.Empty, gameFile));
+                }
+            }
+
+            var extras = await _repository.GetExtrasForGameAsync(game.GA_Id);
+            foreach (var extra in extras)
+            {
+                if (string.IsNullOrWhiteSpace(extra.Filename))
+                {
+                    issues.Add(new VerifyFilesForm.FileIssue("Extra", game.Name, extra.Name, "(missing filename)"));
+                    continue;
+                }
+
+                string extraFile = Path.Combine(extrasPath, extra.Filename);
+                if (!File.Exists(extraFile))
+                {
+                    issues.Add(new VerifyFilesForm.FileIssue("Extra", game.Name, extra.Name, extraFile));
+                }
+            }
+        }
+
+        return issues;
+    }
+
+    private string GetAppDataBasePath()
+    {
+        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string basePathRoot = string.IsNullOrWhiteSpace(appData)
+            ? AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            : appData;
+        return Path.Combine(basePathRoot, "GameBase");
+    }
+
+    private string GetDocumentsBasePath()
+    {
+        string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        return string.IsNullOrWhiteSpace(documentsPath)
+            ? GetAppDataBasePath()
+            : Path.Combine(documentsPath, "GameBase");
+    }
+
+    private string GetConfiguredPath(string settingKey, string defaultFolder)
+    {
+        string appBase = GetAppDataBasePath();
+        string gemusIni = Path.Combine(appBase, "Gemus.ini");
+        string docsBase = GetDocumentsBasePath();
+        string defaultPath = Path.Combine(docsBase, defaultFolder);
+        return GemusIniHelper.GetIniMessage("Settings", settingKey, defaultPath, gemusIni);
     }
 
     private void aboutToolStripMenuItem_Click(object? sender, EventArgs e)
