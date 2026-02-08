@@ -19,6 +19,7 @@ public partial class Form1 : Form
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         InitializeComponent();
         Load += Form1_Load;
+        editGameToolStripMenuItem.Click += editGameToolStripMenuItem_Click;
     }
 
     private async void Form1_Load(object? sender, EventArgs e)
@@ -211,6 +212,23 @@ public partial class Form1 : Form
     private async void playGameToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         await PlaySelectedGameAsync();
+    }
+
+    private void editGameToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (dgvGames.SelectedRows.Count == 0)
+        {
+            MessageBox.Show("Please select a game to view.", "No Selection",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var selectedId = (int)dgvGames.SelectedRows[0].Cells["GA_Id"].Value;
+        var game = _filteredGames.FirstOrDefault(g => g.GA_Id == selectedId);
+        if (game == null) return;
+
+        using var dlg = new GameDetailsForm(game, _years, _publishers, _programmers, _genres);
+        dlg.ShowDialog(this);
     }
 
     private async void dgvGames_DoubleClick(object? sender, EventArgs e)
