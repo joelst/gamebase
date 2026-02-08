@@ -16,6 +16,9 @@
     <Compile Update="CustomViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="ExportDatabaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="ExtrasEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -85,7 +85,7 @@ public partial class ImportDatabaseForm : Form
       {
         txtAccess.Text = dialog.FileName;
         _accessPath = dialog.FileName;
-        
+
         // Auto-suggest SQLite path
         string suggestedPath = Path.ChangeExtension(dialog.FileName, ".db");
         var txtSqlite = Controls.Find("txtSqlitePath", false).FirstOrDefault() as TextBox;
@@ -94,7 +94,7 @@ public partial class ImportDatabaseForm : Form
           txtSqlite.Text = suggestedPath;
           _sqlitePath = suggestedPath;
         }
-        
+
         ValidatePaths();
       }
     };
@@ -282,7 +282,7 @@ public partial class ImportDatabaseForm : Form
 
     // Start import
     _isImporting = true;
-    
+
     var btnImport = Controls.Find("btnImport", false).FirstOrDefault() as Button;
     var btnCancel = Controls.Find("btnCancel", false).FirstOrDefault() as Button;
     var lblProgress = Controls.Find("lblProgress", false).FirstOrDefault() as Label;

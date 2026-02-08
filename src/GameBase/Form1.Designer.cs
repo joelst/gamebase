@@ -44,6 +44,7 @@ partial class Form1
     private ToolStripMenuItem gameToolStripMenuItem;
     private ToolStripMenuItem helpToolStripMenuItem;
     private ToolStripMenuItem importAccessDatabaseToolStripMenuItem;
+    private ToolStripMenuItem exportToAccessDatabaseToolStripMenuItem;
     private ToolStripSeparator toolStripSeparatorFile;
     private ToolStripMenuItem exitToolStripMenuItem;
     private ToolStripMenuItem playGameToolStripMenuItem;
@@ -76,6 +77,7 @@ partial class Form1
         menuStrip1 = new MenuStrip();
         fileToolStripMenuItem = new ToolStripMenuItem();
         importAccessDatabaseToolStripMenuItem = new ToolStripMenuItem();
+        exportToAccessDatabaseToolStripMenuItem = new ToolStripMenuItem();
         toolStripSeparatorFile = new ToolStripSeparator();
         exitToolStripMenuItem = new ToolStripMenuItem();
         viewToolStripMenuItem = new ToolStripMenuItem();
@@ -143,7 +145,7 @@ partial class Form1
         //
         // fileToolStripMenuItem
         //
-        fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importAccessDatabaseToolStripMenuItem, toolStripSeparatorFile, exitToolStripMenuItem });
+        fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importAccessDatabaseToolStripMenuItem, exportToAccessDatabaseToolStripMenuItem, toolStripSeparatorFile, exitToolStripMenuItem });
         fileToolStripMenuItem.Name = "fileToolStripMenuItem";
         fileToolStripMenuItem.Size = new Size(37, 20);
         fileToolStripMenuItem.Text = "&File";
@@ -151,19 +153,26 @@ partial class Form1
         // importAccessDatabaseToolStripMenuItem
         //
         importAccessDatabaseToolStripMenuItem.Name = "importAccessDatabaseToolStripMenuItem";
-        importAccessDatabaseToolStripMenuItem.Size = new Size(235, 22);
+        importAccessDatabaseToolStripMenuItem.Size = new Size(260, 22);
         importAccessDatabaseToolStripMenuItem.Text = "&Import Access Database...";
         importAccessDatabaseToolStripMenuItem.Click += importAccessDatabaseToolStripMenuItem_Click;
+        //
+        // exportToAccessDatabaseToolStripMenuItem
+        //
+        exportToAccessDatabaseToolStripMenuItem.Name = "exportToAccessDatabaseToolStripMenuItem";
+        exportToAccessDatabaseToolStripMenuItem.Size = new Size(260, 22);
+        exportToAccessDatabaseToolStripMenuItem.Text = "&Export to Access Database...";
+        exportToAccessDatabaseToolStripMenuItem.Click += exportToAccessDatabaseToolStripMenuItem_Click;
         //
         // toolStripSeparatorFile
         //
         toolStripSeparatorFile.Name = "toolStripSeparatorFile";
-        toolStripSeparatorFile.Size = new Size(232, 6);
+        toolStripSeparatorFile.Size = new Size(257, 6);
         //
         // exitToolStripMenuItem
         //
         exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-        exitToolStripMenuItem.Size = new Size(235, 22);
+        exitToolStripMenuItem.Size = new Size(260, 22);
         exitToolStripMenuItem.Text = "E&xit";
         exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
         //

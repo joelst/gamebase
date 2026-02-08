@@ -21,11 +21,15 @@ namespace GBSql.Data;
 public class GameBaseSqliteContext : IDisposable
 {
   private readonly string _connectionString;
+  private readonly string _databasePath;
   private SqliteConnection? _connection;
   private bool _disposed;
 
+  public string DatabasePath => _databasePath;
+
   public GameBaseSqliteContext(string databasePath)
   {
+    _databasePath = databasePath;
     _connectionString = $"Data Source={databasePath}";
   }
 
