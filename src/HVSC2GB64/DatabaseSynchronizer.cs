@@ -63,7 +63,8 @@ internal class DatabaseSynchronizer
   /// <summary>
   /// Synchronizes HVSC SID data to database.
   /// </summary>
-  public void SynchronizeSidData(List<SidData> sidFiles)
+  /// <returns>Number of entries added to database</returns>
+  public int SynchronizeSidData(List<SidData> sidFiles)
   {
     Console.WriteLine($"Synchronizing {sidFiles.Count} SID files to database...");
 
@@ -98,10 +99,12 @@ internal class DatabaseSynchronizer
       }
 
       Console.WriteLine($"Sync complete: {added} added, {updated} updated, {skipped} skipped");
+      return added;
     }
     catch (Exception ex)
     {
       Console.WriteLine($"Error during synchronization: {ex.Message}");
+      return 0;
     }
   }
 
