@@ -3,7 +3,7 @@ namespace GameBase;
 partial class SplashForm
 {
   private System.ComponentModel.IContainer components = null;
-  private Label lblTitle;
+  private PictureBox picLogo;
   private Label lblStatus;
   private ProgressBar progressBar;
 
@@ -18,25 +18,37 @@ partial class SplashForm
 
   private void InitializeComponent()
   {
-    lblTitle = new Label();
+    picLogo = new PictureBox();
     lblStatus = new Label();
     progressBar = new ProgressBar();
+    ((System.ComponentModel.ISupportInitialize)picLogo).BeginInit();
     SuspendLayout();
     //
-    // lblTitle
+    // picLogo
     //
-    lblTitle.AutoSize = true;
-    lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-    lblTitle.Location = new Point(12, 12);
-    lblTitle.Name = "lblTitle";
-    lblTitle.Size = new Size(105, 25);
-    lblTitle.TabIndex = 0;
-    lblTitle.Text = "GameBase";
+    picLogo.Dock = DockStyle.Top;
+    picLogo.Location = new Point(0, 0);
+    picLogo.Name = "picLogo";
+    picLogo.Size = new Size(800, 117);
+    picLogo.SizeMode = PictureBoxSizeMode.CenterImage;
+    picLogo.TabIndex = 0;
+    picLogo.TabStop = false;
+    
+    // Load embedded GIF resource
+    var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+    var resourceName = "GameBase.GameBase.gif";
+    using (var stream = assembly.GetManifestResourceStream(resourceName))
+    {
+      if (stream != null)
+      {
+        picLogo.Image = Image.FromStream(stream);
+      }
+    }
     //
     // lblStatus
     //
     lblStatus.AutoSize = true;
-    lblStatus.Location = new Point(12, 45);
+    lblStatus.Location = new Point(12, 127);
     lblStatus.Name = "lblStatus";
     lblStatus.Size = new Size(83, 15);
     lblStatus.TabIndex = 1;
@@ -44,10 +56,10 @@ partial class SplashForm
     //
     // progressBar
     //
-    progressBar.Location = new Point(12, 70);
+    progressBar.Location = new Point(12, 152);
     progressBar.MarqueeAnimationSpeed = 30;
     progressBar.Name = "progressBar";
-    progressBar.Size = new Size(260, 10);
+    progressBar.Size = new Size(776, 10);
     progressBar.Style = ProgressBarStyle.Marquee;
     progressBar.TabIndex = 2;
     //
@@ -55,18 +67,19 @@ partial class SplashForm
     //
     AutoScaleDimensions = new SizeF(7F, 15F);
     AutoScaleMode = AutoScaleMode.Font;
-    ClientSize = new Size(284, 100);
+    ClientSize = new Size(800, 180);
     ControlBox = false;
     Controls.Add(progressBar);
     Controls.Add(lblStatus);
-    Controls.Add(lblTitle);
-    FormBorderStyle = FormBorderStyle.FixedDialog;
+    Controls.Add(picLogo);
+    FormBorderStyle = FormBorderStyle.None;
     MaximizeBox = false;
     MinimizeBox = false;
     Name = "SplashForm";
     ShowInTaskbar = false;
     StartPosition = FormStartPosition.CenterScreen;
     Text = "GameBase";
+    ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
     ResumeLayout(false);
     PerformLayout();
   }

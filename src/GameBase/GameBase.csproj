@@ -15,4 +15,8 @@
     <ProjectReference Include="..\GBMigrator\GBMigrator.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="GameBase.gif" />
+  </ItemGroup>
+
 </Project>
