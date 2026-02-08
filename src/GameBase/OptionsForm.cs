@@ -16,12 +16,12 @@ namespace GameBase
           ? AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
           : appData;
       string defaultBase = Path.Combine(basePathRoot, "GameBase");
-      
+
       // Database and config in AppData
       txtBasePath.Text = defaultBase;
       txtGbName.Text = "GameBase";
       txtDbPath.Text = Path.Combine(defaultBase, "Data", "GameBase.db");
-      
+
       // Games and Extras in Documents
       string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
       string gamesBase = string.IsNullOrWhiteSpace(documentsPath)
@@ -29,7 +29,7 @@ namespace GameBase
           : Path.Combine(documentsPath, "GameBase");
       txtGamesPath.Text = Path.Combine(gamesBase, "Games");
       txtExtrasPath.Text = Path.Combine(gamesBase, "Extras");
-      
+
       cmbBackend.DataSource = Enum.GetValues(typeof(ArchiveBackend));
 
       TryLoadExisting();
