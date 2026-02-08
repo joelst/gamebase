@@ -27,7 +27,7 @@ public partial class AboutForm : Form
     var version = assembly.GetName().Version;
     var informationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
 
-    lblVersion.Text = $"Version {informationalVersion ?? version?.ToString() ?? "1.0.0"}";
+    lblVersion.Text = $"Version {informationalVersion ?? version?.ToString() ?? "2.0.0"}";
     lblCopyright.Text = "Copyright © 1999-2010 James Burrows\nMigrated to .NET 2026";
 
     txtAbout.Text = @"GameBase - The Universal Retro-Gaming Frontend and Database Utility
