@@ -72,6 +72,8 @@ partial class Form1
         exitToolStripMenuItem = new ToolStripMenuItem();
         viewToolStripMenuItem = new ToolStripMenuItem();
         customViewsToolStripMenuItem = new ToolStripMenuItem();
+        quickFilterToolStripMenuItem = new ToolStripMenuItem();
+        clearFiltersToolStripMenuItem = new ToolStripMenuItem();
         gameToolStripMenuItem = new ToolStripMenuItem();
         playGameToolStripMenuItem = new ToolStripMenuItem();
         editGameToolStripMenuItem = new ToolStripMenuItem();
@@ -96,6 +98,12 @@ partial class Form1
         lstExtras = new ListBox();
         lblStatus = new Label();
         txtSearch = new TextBox();
+        dgvContextMenu = new ContextMenuStrip(components);
+        toggleFavoriteToolStripMenuItem = new ToolStripMenuItem();
+        toggleClassicToolStripMenuItem = new ToolStripMenuItem();
+        toggleAdultToolStripMenuItem = new ToolStripMenuItem();
+        flowSearch = new FlowLayoutPanel();
+        btnClearFilters = new Button();
         menuStrip1.SuspendLayout();
         tableLayoutPanel1.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
@@ -107,6 +115,7 @@ partial class Form1
         tabInfo.SuspendLayout();
         tabScreenshots.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)picScreenshot).BeginInit();
+        dgvContextMenu.SuspendLayout();
         screenshotContextMenu.SuspendLayout();
         tabExtras.SuspendLayout();
         SuspendLayout();
@@ -149,7 +158,6 @@ partial class Form1
         //
         // quickFilterToolStripMenuItem
         //
-        quickFilterToolStripMenuItem = new ToolStripMenuItem();
         quickFilterToolStripMenuItem.Name = "quickFilterToolStripMenuItem";
         quickFilterToolStripMenuItem.Size = new Size(180, 22);
         quickFilterToolStripMenuItem.Text = "Quick &Filter...";
@@ -157,7 +165,6 @@ partial class Form1
         //
         // clearFiltersToolStripMenuItem
         //
-        clearFiltersToolStripMenuItem = new ToolStripMenuItem();
         clearFiltersToolStripMenuItem.Name = "clearFiltersToolStripMenuItem";
         clearFiltersToolStripMenuItem.Size = new Size(180, 22);
         clearFiltersToolStripMenuItem.Text = "Clear Filters";
@@ -453,6 +460,7 @@ partial class Form1
         tabInfo.ResumeLayout(false);
         tabScreenshots.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)picScreenshot).EndInit();
+        dgvContextMenu.ResumeLayout(false);
         screenshotContextMenu.ResumeLayout(false);
         tabExtras.ResumeLayout(false);
         tableLayoutPanel1.ResumeLayout(false);
