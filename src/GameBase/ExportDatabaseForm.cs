@@ -89,7 +89,7 @@ public partial class ExportDatabaseForm : Form
       {
         txtSqlite.Text = dialog.FileName;
         _sqlitePath = dialog.FileName;
-        
+
         // Auto-suggest Access path
         string suggestedPath = Path.ChangeExtension(dialog.FileName, ".mdb");
         var txtAccess = Controls.Find("txtAccessPath", false).FirstOrDefault() as TextBox;
@@ -98,7 +98,7 @@ public partial class ExportDatabaseForm : Form
           txtAccess.Text = suggestedPath;
           _accessPath = suggestedPath;
         }
-        
+
         ValidatePaths();
       }
     };
@@ -219,7 +219,7 @@ public partial class ExportDatabaseForm : Form
     Controls.Add(btnExport);
 
     CancelButton = btnCancel;
-    
+
     // Initial validation
     ValidatePaths();
   }
@@ -278,7 +278,7 @@ public partial class ExportDatabaseForm : Form
 
     // Start export
     _isExporting = true;
-    
+
     var btnExport = Controls.Find("btnExport", false).FirstOrDefault() as Button;
     var btnCancel = Controls.Find("btnCancel", false).FirstOrDefault() as Button;
     var lblProgress = Controls.Find("lblProgress", false).FirstOrDefault() as Label;
