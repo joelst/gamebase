@@ -16,11 +16,20 @@ namespace GameBase
           ? AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
           : appData;
       string defaultBase = Path.Combine(basePathRoot, "GameBase");
+      
+      // Database and config in AppData
       txtBasePath.Text = defaultBase;
       txtGbName.Text = "GameBase";
       txtDbPath.Text = Path.Combine(defaultBase, "Data", "GameBase.db");
-      txtGamesPath.Text = Path.Combine(defaultBase, "Games");
-      txtExtrasPath.Text = Path.Combine(defaultBase, "Extras");
+      
+      // Games and Extras in Documents
+      string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+      string gamesBase = string.IsNullOrWhiteSpace(documentsPath)
+          ? Path.Combine(basePathRoot, "GameBase")
+          : Path.Combine(documentsPath, "GameBase");
+      txtGamesPath.Text = Path.Combine(gamesBase, "Games");
+      txtExtrasPath.Text = Path.Combine(gamesBase, "Extras");
+      
       cmbBackend.DataSource = Enum.GetValues(typeof(ArchiveBackend));
 
       TryLoadExisting();
@@ -40,11 +49,11 @@ namespace GameBase
           string dbPath = GemusIniHelper.GetIniMessage("Settings", "DatabasePath", string.Empty, gemusIni);
           if (!string.IsNullOrWhiteSpace(dbPath))
             txtDbPath.Text = dbPath;
-          
+
           string gamesPath = GemusIniHelper.GetIniMessage("Settings", "GamesPath", string.Empty, gemusIni);
           if (!string.IsNullOrWhiteSpace(gamesPath))
             txtGamesPath.Text = gamesPath;
-          
+
           string extrasPath = GemusIniHelper.GetIniMessage("Settings", "ExtrasPath", string.Empty, gemusIni);
           if (!string.IsNullOrWhiteSpace(extrasPath))
             txtExtrasPath.Text = extrasPath;
@@ -92,21 +101,21 @@ namespace GameBase
           Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
           GemusIniHelper.WriteIniValue("Settings", "DatabasePath", dbPath, gemusIni);
         }
-        
+
         var gamesPath = txtGamesPath.Text.Trim();
         if (!string.IsNullOrEmpty(gamesPath))
         {
           Directory.CreateDirectory(gamesPath);
           GemusIniHelper.WriteIniValue("Settings", "GamesPath", gamesPath, gemusIni);
         }
-        
+
         var extrasPath = txtExtrasPath.Text.Trim();
         if (!string.IsNullOrEmpty(extrasPath))
         {
           Directory.CreateDirectory(extrasPath);
           GemusIniHelper.WriteIniValue("Settings", "ExtrasPath", extrasPath, gemusIni);
         }
-        
+
         // Create default Emulators.ini if it doesn't exist
         CreateDefaultEmulatorsIni(gemusIni);
 
@@ -136,7 +145,7 @@ namespace GameBase
         txtDbPath.Text = dlg.FileName;
       }
     }
-    
+
     private void btnBrowseGames_Click(object sender, EventArgs e)
     {
       using var folder = new FolderBrowserDialog();
@@ -147,7 +156,7 @@ namespace GameBase
         txtGamesPath.Text = folder.SelectedPath;
       }
     }
-    
+
     private void btnBrowseExtras_Click(object sender, EventArgs e)
     {
       using var folder = new FolderBrowserDialog();
@@ -158,19 +167,19 @@ namespace GameBase
         txtExtrasPath.Text = folder.SelectedPath;
       }
     }
-    
+
     private void CreateDefaultEmulatorsIni(string gemusIniPath)
     {
       try
       {
         string basePath = Path.GetDirectoryName(gemusIniPath)!;
         string emulatorsIni = Path.Combine(basePath, "GameBase", "Emulators.ini");
-        
+
         if (File.Exists(emulatorsIni))
           return; // Already exists
-          
+
         Directory.CreateDirectory(Path.GetDirectoryName(emulatorsIni)!);
-        
+
         // Create a minimal default Emulators.ini
         var content = @"[Emulator0]
 Name=Default Emulator
@@ -182,7 +191,7 @@ FileTypes=d64;t64;prg;zip
 [General]
 NumberOfEmulators=1
 ";
-        
+
         File.WriteAllText(emulatorsIni, content);
       }
       catch

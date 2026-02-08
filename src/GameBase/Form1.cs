@@ -57,10 +57,10 @@ public partial class Form1 : Form
                 ? AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                 : appData;
             string basePath = Path.Combine(basePathRoot, "GameBase");
-            
+
             // Ensure directory exists
             Directory.CreateDirectory(basePath);
-            
+
             engine.SetAppContext(basePath + Path.DirectorySeparatorChar, string.Empty, "GameBase");
             engine.Init("GameBase");
             engine.SetSilentMode(false);
@@ -503,7 +503,7 @@ public partial class Form1 : Form
         try
         {
             lblStatus.Text = $"Launching {game.Name}...";
-            
+
             // Get base paths from configuration
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string basePathRoot = string.IsNullOrWhiteSpace(appData)
@@ -511,18 +511,22 @@ public partial class Form1 : Form
                 : appData;
             string basePath = Path.Combine(basePathRoot, "GameBase");
             string gemusIni = Path.Combine(basePath, "Gemus.ini");
-            
-            // Read configured paths or use defaults
-            string gamesPath = GemusIniHelper.GetIniMessage("Settings", "GamesPath", 
-                Path.Combine(basePath, "Games"), gemusIni);
+
+            // Read configured paths or use defaults (Documents for games, AppData for config)
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string defaultGamesBase = string.IsNullOrWhiteSpace(documentsPath)
+                ? basePath
+                : Path.Combine(documentsPath, "GameBase");
+            string gamesPath = GemusIniHelper.GetIniMessage("Settings", "GamesPath",
+                Path.Combine(defaultGamesBase, "Games"), gemusIni);
             string extractPath = Path.Combine(basePath, "Temp");
-            
+
             Directory.CreateDirectory(gamesPath);
             Directory.CreateDirectory(extractPath);
-            
+
             // Build full game path
             string gameFile = Path.Combine(gamesPath, game.Filename ?? string.Empty);
-            
+
             if (!File.Exists(gameFile))
             {
                 MessageBox.Show($"Game file not found:\n{gameFile}\n\n" +
@@ -531,11 +535,11 @@ public partial class Form1 : Form
                 lblStatus.Text = $"Game file not found: {game.Name}";
                 return;
             }
-            
+
             string defaultFile = string.Empty;
-            
+
             // Run emulator (index 0 = first emulator in Emulators.ini)
-            await Task.Run(() => 
+            await Task.Run(() =>
             {
                 string result = _gemusEngine.RunEmulator(
                     emuIdx: 0,
@@ -545,7 +549,7 @@ public partial class Form1 : Form
                     extractDestFolder: extractPath,
                     fromDb: true
                 );
-                
+
                 if (!string.IsNullOrWhiteSpace(result))
                 {
                     Invoke(() =>
@@ -555,7 +559,7 @@ public partial class Form1 : Form
                     });
                 }
             });
-            
+
             lblStatus.Text = $"Launched {game.Name}";
         }
         catch (Exception ex)
@@ -594,24 +598,28 @@ public partial class Form1 : Form
         try
         {
             lblStatus.Text = $"Launching {extraItem.Extra.Name}...";
-            
+
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string basePathRoot = string.IsNullOrWhiteSpace(appData)
                 ? AppContext.BaseDirectory
                 : appData;
             string basePath = Path.Combine(basePathRoot, "GameBase");
             string gemusIni = Path.Combine(basePath, "Gemus.ini");
-            
-            // Read configured paths or use defaults
+
+            // Read configured paths or use defaults (Documents for extras, AppData for config)
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string defaultExtrasBase = string.IsNullOrWhiteSpace(documentsPath)
+                ? basePath
+                : Path.Combine(documentsPath, "GameBase");
             string extrasPath = GemusIniHelper.GetIniMessage("Settings", "ExtrasPath",
-                Path.Combine(basePath, "Extras"), gemusIni);
+                Path.Combine(defaultExtrasBase, "Extras"), gemusIni);
             string extractPath = Path.Combine(basePath, "Temp");
-            
+
             Directory.CreateDirectory(extrasPath);
             Directory.CreateDirectory(extractPath);
-            
+
             string extraFile = Path.Combine(extrasPath, extraItem.Extra.Filename ?? string.Empty);
-            
+
             if (!File.Exists(extraFile))
             {
                 MessageBox.Show($"Extra file not found:\n{extraFile}\n\n" +
@@ -620,9 +628,9 @@ public partial class Form1 : Form
                 lblStatus.Text = $"Extra file not found: {extraItem.Extra.Name}";
                 return;
             }
-            
+
             string defaultFile = string.Empty;
-            
+
             await Task.Run(() =>
             {
                 string result = _gemusEngine.RunEmulator(
@@ -633,7 +641,7 @@ public partial class Form1 : Form
                     extractDestFolder: extractPath,
                     fromDb: true
                 );
-                
+
                 if (!string.IsNullOrWhiteSpace(result))
                 {
                     Invoke(() =>
@@ -643,7 +651,7 @@ public partial class Form1 : Form
                     });
                 }
             });
-            
+
             lblStatus.Text = $"Launched {extraItem.Extra.Name}";
         }
         catch (Exception ex)
