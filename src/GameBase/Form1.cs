@@ -100,7 +100,7 @@ public partial class Form1 : Form
 
             UpdateGameGrid();
 
-            lblStatus.Text = $"Loaded {_allGames.Count} games";
+            UpdateStatus($"Loaded {_allGames.Count} games");
         }
         catch (Exception ex)
         {
@@ -110,13 +110,14 @@ public partial class Form1 : Form
         }
     }
 
-    private void UpdateGameGrid()
+    private void UpdateGameGrid(int? selectedId = null)
     {
         dgvGames.DataSource = null;
 
         if (_filteredGames.Count == 0)
         {
             lblSearch.Text = "Games (0 of 0)";
+            lblStatus.Text = "Filters: none";
             return;
         }
 
@@ -124,6 +125,9 @@ public partial class Form1 : Form
         var displayData = _filteredGames.Select(g => new
         {
             g.GA_Id,
+            Fav = g.Fav == 1,
+            Classic = g.Classic == 1,
+            Adult = g.Adult == 1,
             Game = g.Name,
             Year = Resolve(_years, g.YE_Id),
             Publisher = Resolve(_publishers, g.PU_Id),
@@ -140,7 +144,21 @@ public partial class Form1 : Form
         // Auto-size columns
         dgvGames.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
+        if (selectedId.HasValue)
+        {
+            foreach (DataGridViewRow row in dgvGames.Rows)
+            {
+                if (row.Cells["GA_Id"].Value is int id && id == selectedId.Value)
+                {
+                    row.Selected = true;
+                    dgvGames.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
+                    break;
+                }
+            }
+        }
+
         lblSearch.Text = $"Games ({_filteredGames.Count} of {_allGames.Count})";
+        UpdateStatus();
     }
 
     private void dgvGames_SelectionChanged(object? sender, EventArgs e)
@@ -176,8 +194,8 @@ public partial class Form1 : Form
             rtbGameInfo.AppendText($"Comments:\n{game.Comment}\n");
         }
 
-        // Load screenshot if available (not yet implemented; schema has no screenshot field)
-        picScreenshot.Image = null;
+        // Load screenshot if available
+        LoadScreenshot(game);
 
         // Load extras
         try
@@ -194,16 +212,26 @@ public partial class Form1 : Form
         {
             lblStatus.Text = $"Error loading extras: {ex.Message}";
         }
+
+        UpdateStatus($"Selected: {game.Name}");
     }
 
     private void LoadScreenshot(GameEntity game)
     {
-        picScreenshot.Image = null;
+        if (picScreenshot.Image != null)
+        {
+            picScreenshot.Image.Dispose();
+            picScreenshot.Image = null;
+        }
         if (string.IsNullOrWhiteSpace(game.ScreenshotFilename)) return;
         var path = Path.Combine(GetScreenshotsPath(), game.ScreenshotFilename);
         if (File.Exists(path))
         {
-            try { picScreenshot.Image = Image.FromFile(path); }
+            try
+            {
+                using var img = Image.FromFile(path);
+                picScreenshot.Image = (Image)img.Clone();
+            }
             catch { /* ignore */ }
         }
     }
@@ -266,6 +294,7 @@ public partial class Form1 : Form
             };
             _customMatchAny = false;
             ApplyCustomFilters();
+            UpdateStatus($"Quick filter: {dlg.SelectedField} contains '{dlg.FilterText}'");
         }
     }
 
@@ -276,6 +305,7 @@ public partial class Form1 : Form
         txtSearch.Text = string.Empty;
         _filteredGames = new List<GameEntity>(_allGames);
         UpdateGameGrid();
+        UpdateStatus("Filters cleared");
     }
 
     private string GetScreenshotsPath()
@@ -310,6 +340,7 @@ public partial class Form1 : Form
                 "Year" => Resolve(_years, g.YE_Id),
                 "Comment" => g.Comment ?? string.Empty,
                 "Favorite" => g.Fav.ToString(),
+                "Classic" => g.Classic.ToString(),
                 "Adult" => g.Adult.ToString(),
                 _ => string.Empty
             };
@@ -446,6 +477,119 @@ public partial class Form1 : Form
 
     private static string Resolve(Dictionary<int, string> map, int? id)
         => id.HasValue && map.TryGetValue(id.Value, out var name) ? name : string.Empty;
+
+    private GameEntity? GetSelectedGame()
+    {
+        if (dgvGames.SelectedRows.Count == 0) return null;
+        var selectedId = (int)dgvGames.SelectedRows[0].Cells["GA_Id"].Value;
+        return _filteredGames.FirstOrDefault(g => g.GA_Id == selectedId);
+    }
+
+    private async void toggleFavoriteToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        var game = GetSelectedGame();
+        if (game == null) return;
+        game.Fav = game.Fav == 1 ? 0 : 1;
+        await _repository.UpsertGameAsync(game);
+        UpdateGameGrid(game.GA_Id);
+        DisplayGameDetails(game);
+    }
+
+    private async void toggleClassicToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        var game = GetSelectedGame();
+        if (game == null) return;
+        game.Classic = game.Classic == 1 ? 0 : 1;
+        await _repository.UpsertGameAsync(game);
+        UpdateGameGrid(game.GA_Id);
+        DisplayGameDetails(game);
+    }
+
+    private async void toggleAdultToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        var game = GetSelectedGame();
+        if (game == null) return;
+        game.Adult = game.Adult == 1 ? 0 : 1;
+        await _repository.UpsertGameAsync(game);
+        UpdateGameGrid(game.GA_Id);
+        DisplayGameDetails(game);
+    }
+
+    private async void selectScreenshotToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        var game = GetSelectedGame();
+        if (game == null) return;
+
+        using var ofd = new OpenFileDialog
+        {
+            Title = "Select Screenshot",
+            Filter = "Image Files|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.tif;*.tiff|All Files|*.*",
+            Multiselect = false
+        };
+
+        if (ofd.ShowDialog(this) == DialogResult.OK)
+        {
+            try
+            {
+                var ext = Path.GetExtension(ofd.FileName);
+                var fileName = $"GA_{game.GA_Id}{ext}";
+                var destPath = Path.Combine(GetScreenshotsPath(), fileName);
+                File.Copy(ofd.FileName, destPath, overwrite: true);
+                game.ScreenshotFilename = fileName;
+                await _repository.UpsertGameAsync(game);
+                LoadScreenshot(game);
+                UpdateGameGrid(game.GA_Id);
+                UpdateStatus($"Screenshot set for {game.Name}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, $"Failed to set screenshot: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UpdateStatus($"Failed to set screenshot: {ex.Message}");
+            }
+        }
+    }
+
+    private async void clearScreenshotToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        var game = GetSelectedGame();
+        if (game == null) return;
+        game.ScreenshotFilename = null;
+        await _repository.UpsertGameAsync(game);
+        LoadScreenshot(game);
+        UpdateGameGrid(game.GA_Id);
+        UpdateStatus($"Screenshot cleared for {game.Name}");
+    }
+
+    private void dgvGames_CellMouseDown(object? sender, DataGridViewCellMouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
+        {
+            dgvGames.ClearSelection();
+            dgvGames.Rows[e.RowIndex].Selected = true;
+            dgvGames.CurrentCell = dgvGames.Rows[e.RowIndex].Cells[e.ColumnIndex];
+        }
+    }
+
+    private void UpdateStatus(string? message = null)
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrWhiteSpace(message)) parts.Add(message);
+
+        if (!string.IsNullOrWhiteSpace(txtSearch.Text))
+            parts.Add($"Search: \"{txtSearch.Text.Trim()}\"");
+
+        if (_customFilters.Count > 0)
+        {
+            var filtersDesc = string.Join("; ", _customFilters.Select(f => $"{f.Field} {f.Operator} \"{f.Value}\""));
+            parts.Add(_customMatchAny ? $"Filters (ANY): {filtersDesc}" : $"Filters (ALL): {filtersDesc}");
+        }
+        else
+        {
+            parts.Add("Filters: none");
+        }
+
+        lblStatus.Text = string.Join(" | ", parts);
+    }
 
     private static bool Contains(string? target, string text)
         => target?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false;

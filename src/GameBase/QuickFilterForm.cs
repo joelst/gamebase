@@ -8,7 +8,7 @@ public partial class QuickFilterForm : Form
 
   private readonly string[] _fields = new[]
   {
-        "Title","Publisher","Programmer","Musician","Language","Genre","Year","Comment","Favorite","Adult"
+        "Title","Publisher","Programmer","Musician","Language","Genre","Year","Comment","Favorite","Classic","Adult"
     };
 
   public QuickFilterForm()

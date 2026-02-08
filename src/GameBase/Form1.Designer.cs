@@ -53,6 +53,15 @@ partial class Form1
     private ToolStripMenuItem clearFiltersToolStripMenuItem;
     private ToolStripMenuItem aboutToolStripMenuItem;
     private TextBox txtSearch;
+    private Button btnClearFilters;
+    private FlowLayoutPanel flowSearch;
+    private ContextMenuStrip dgvContextMenu;
+    private ToolStripMenuItem toggleFavoriteToolStripMenuItem;
+    private ToolStripMenuItem toggleClassicToolStripMenuItem;
+    private ToolStripMenuItem toggleAdultToolStripMenuItem;
+    private ContextMenuStrip screenshotContextMenu;
+    private ToolStripMenuItem selectScreenshotToolStripMenuItem;
+    private ToolStripMenuItem clearScreenshotToolStripMenuItem;
     private Label lblSearch;
 
     private void InitializeComponent()
@@ -79,6 +88,9 @@ partial class Form1
         rtbGameInfo = new RichTextBox();
         tabScreenshots = new TabPage();
         picScreenshot = new PictureBox();
+        screenshotContextMenu = new ContextMenuStrip(components);
+        selectScreenshotToolStripMenuItem = new ToolStripMenuItem();
+        clearScreenshotToolStripMenuItem = new ToolStripMenuItem();
         tabExtras = new TabPage();
         lstExtras = new ListBox();
         lblStatus = new Label();
@@ -94,6 +106,7 @@ partial class Form1
         tabInfo.SuspendLayout();
         tabScreenshots.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)picScreenshot).BeginInit();
+        screenshotContextMenu.SuspendLayout();
         tabExtras.SuspendLayout();
         SuspendLayout();
         //
@@ -213,7 +226,7 @@ partial class Form1
         tableLayoutPanel1.Controls.Add(splitContainer1, 0, 1);
         tableLayoutPanel1.Controls.Add(lblStatus, 0, 3);
         tableLayoutPanel1.Controls.Add(btnOptions, 0, 2);
-        tableLayoutPanel1.Controls.Add(txtSearch, 0, 0);
+        tableLayoutPanel1.Controls.Add(flowSearch, 0, 0);
         tableLayoutPanel1.Dock = DockStyle.Fill;
         tableLayoutPanel1.Location = new Point(0, 24);
         tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -248,6 +261,7 @@ partial class Form1
         dgvGames.AllowUserToAddRows = false;
         dgvGames.AllowUserToDeleteRows = false;
         dgvGames.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        dgvGames.ContextMenuStrip = dgvContextMenu;
         dgvGames.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dgvGames.Location = new Point(3, 23);
         dgvGames.MultiSelect = false;
@@ -259,6 +273,7 @@ partial class Form1
         dgvGames.TabIndex = 1;
         dgvGames.SelectionChanged += dgvGames_SelectionChanged;
         dgvGames.DoubleClick += dgvGames_DoubleClick;
+        dgvGames.CellMouseDown += dgvGames_CellMouseDown;
         //
         // lblSearch
         //
@@ -315,6 +330,7 @@ partial class Form1
         //
         // picScreenshot
         //
+        picScreenshot.ContextMenuStrip = screenshotContextMenu;
         picScreenshot.Dock = DockStyle.Fill;
         picScreenshot.Location = new Point(3, 3);
         picScreenshot.Name = "picScreenshot";
@@ -323,6 +339,48 @@ partial class Form1
         picScreenshot.TabIndex = 0;
         picScreenshot.TabStop = false;
         //
+        // dgvContextMenu
+        //
+        dgvContextMenu.Items.AddRange(new ToolStripItem[] { toggleFavoriteToolStripMenuItem, toggleClassicToolStripMenuItem, toggleAdultToolStripMenuItem });
+        //
+        // toggleFavoriteToolStripMenuItem
+        //
+        toggleFavoriteToolStripMenuItem.Name = "toggleFavoriteToolStripMenuItem";
+        toggleFavoriteToolStripMenuItem.Size = new Size(159, 22);
+        toggleFavoriteToolStripMenuItem.Text = "Toggle Favorite";
+        toggleFavoriteToolStripMenuItem.Click += toggleFavoriteToolStripMenuItem_Click;
+        //
+        // toggleClassicToolStripMenuItem
+        //
+        toggleClassicToolStripMenuItem.Name = "toggleClassicToolStripMenuItem";
+        toggleClassicToolStripMenuItem.Size = new Size(159, 22);
+        toggleClassicToolStripMenuItem.Text = "Toggle Classic";
+        toggleClassicToolStripMenuItem.Click += toggleClassicToolStripMenuItem_Click;
+        //
+        // toggleAdultToolStripMenuItem
+        //
+        toggleAdultToolStripMenuItem.Name = "toggleAdultToolStripMenuItem";
+        toggleAdultToolStripMenuItem.Size = new Size(159, 22);
+        toggleAdultToolStripMenuItem.Text = "Toggle Adult";
+        toggleAdultToolStripMenuItem.Click += toggleAdultToolStripMenuItem_Click;
+
+        // screenshotContextMenu
+        screenshotContextMenu.Items.AddRange(new ToolStripItem[] { selectScreenshotToolStripMenuItem, clearScreenshotToolStripMenuItem });
+        screenshotContextMenu.Name = "screenshotContextMenu";
+        screenshotContextMenu.Size = new Size(171, 48);
+
+        // selectScreenshotToolStripMenuItem
+        selectScreenshotToolStripMenuItem.Name = "selectScreenshotToolStripMenuItem";
+        selectScreenshotToolStripMenuItem.Size = new Size(170, 22);
+        selectScreenshotToolStripMenuItem.Text = "Select Screenshot";
+        selectScreenshotToolStripMenuItem.Click += selectScreenshotToolStripMenuItem_Click;
+
+        // clearScreenshotToolStripMenuItem
+        clearScreenshotToolStripMenuItem.Name = "clearScreenshotToolStripMenuItem";
+        clearScreenshotToolStripMenuItem.Size = new Size(170, 22);
+        clearScreenshotToolStripMenuItem.Text = "Clear Screenshot";
+        clearScreenshotToolStripMenuItem.Click += clearScreenshotToolStripMenuItem_Click;
+
         // tabExtras
         //
         tabExtras.Controls.Add(lstExtras);
@@ -357,13 +415,20 @@ partial class Form1
         //
         // txtSearch
         //
-        txtSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        txtSearch.Location = new Point(3, 6);
-        txtSearch.Name = "txtSearch";
+        flowSearch.AutoSize = true;
+        flowSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        flowSearch.Dock = DockStyle.Fill;
+        flowSearch.FlowDirection = FlowDirection.LeftToRight;
+        flowSearch.Controls.Add(txtSearch);
+        flowSearch.Controls.Add(btnClearFilters);
+
+        txtSearch.Width = 400;
         txtSearch.PlaceholderText = "Search games...";
-        txtSearch.Size = new Size(994, 23);
-        txtSearch.TabIndex = 2;
         txtSearch.TextChanged += txtSearch_TextChanged;
+
+        btnClearFilters.AutoSize = true;
+        btnClearFilters.Text = "Clear";
+        btnClearFilters.Click += clearFiltersToolStripMenuItem_Click;
         //
         // Form1
         //
@@ -387,6 +452,7 @@ partial class Form1
         tabInfo.ResumeLayout(false);
         tabScreenshots.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)picScreenshot).EndInit();
+        screenshotContextMenu.ResumeLayout(false);
         tabExtras.ResumeLayout(false);
         tableLayoutPanel1.ResumeLayout(false);
         tableLayoutPanel1.PerformLayout();
