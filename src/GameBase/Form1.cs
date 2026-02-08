@@ -13,6 +13,15 @@ public partial class Form1 : Form
     private readonly Dictionary<int, string> _years = new();
     private readonly Dictionary<int, string> _programmers = new();
     private readonly Dictionary<int, string> _genres = new();
+    private readonly Dictionary<int, string> _musicians = new();
+    private readonly Dictionary<int, string> _languages = new();
+    private readonly Dictionary<int, string> _artists = new();
+    private readonly Dictionary<int, string> _developers = new();
+    private readonly Dictionary<int, string> _licenses = new();
+    private readonly Dictionary<int, string> _rarities = new();
+    private readonly Dictionary<int, string> _pgenres = new();
+    private readonly Dictionary<int, string> _difficulty = new();
+    private readonly Dictionary<int, string> _crackers = new();
 
     public Form1(IGameBaseRepository repository)
     {
@@ -65,6 +74,15 @@ public partial class Form1 : Form
         await LoadAsync("Years", _years);
         await LoadAsync("Programmers", _programmers);
         await LoadAsync("Genres", _genres);
+        await LoadAsync("Musicians", _musicians);
+        await LoadAsync("Languages", _languages);
+        await LoadAsync("Artists", _artists);
+        await LoadAsync("Developers", _developers);
+        await LoadAsync("Licenses", _licenses);
+        await LoadAsync("Rarities", _rarities);
+        await LoadAsync("PGenres", _pgenres);
+        await LoadAsync("Difficulty", _difficulty);
+        await LoadAsync("Crackers", _crackers);
     }
 
     private async Task LoadGamesAsync()
@@ -228,7 +246,8 @@ public partial class Form1 : Form
         var game = _filteredGames.FirstOrDefault(g => g.GA_Id == selectedId);
         if (game == null) return;
 
-        using var dlg = new GameDetailsForm(game, _years, _publishers, _programmers, _genres);
+        using var dlg = new GameDetailsForm(game, _years, _publishers, _programmers, _genres,
+            _musicians, _languages, _artists, _developers, _licenses, _rarities, _pgenres, _difficulty, _crackers);
         dlg.ShowDialog(this);
     }
 

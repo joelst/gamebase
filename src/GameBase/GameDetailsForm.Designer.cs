@@ -35,6 +35,7 @@ partial class GameDetailsForm
   private Label lblComment;
   private RichTextBox rtbComment;
   private Button btnClose;
+  private Button btnAdvanced;
   private TableLayoutPanel tableLayoutPanel1;
 
   /// <summary>
@@ -55,6 +56,7 @@ partial class GameDetailsForm
     cboGenre = new ComboBox();
     lblComment = new Label();
     rtbComment = new RichTextBox();
+    btnAdvanced = new Button();
     btnClose = new Button();
     tableLayoutPanel1 = new TableLayoutPanel();
     tableLayoutPanel1.SuspendLayout();
@@ -77,6 +79,7 @@ partial class GameDetailsForm
     tableLayoutPanel1.Controls.Add(cboGenre, 1, 4);
     tableLayoutPanel1.Controls.Add(lblComment, 0, 5);
     tableLayoutPanel1.Controls.Add(rtbComment, 1, 5);
+    tableLayoutPanel1.Controls.Add(btnAdvanced, 0, 6);
     tableLayoutPanel1.Controls.Add(btnClose, 1, 6);
     tableLayoutPanel1.Dock = DockStyle.Fill;
     tableLayoutPanel1.Location = new Point(0, 0);
@@ -223,11 +226,22 @@ partial class GameDetailsForm
     //
     // btnClose
     //
+    btnAdvanced.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+    btnAdvanced.Location = new Point(3, 363);
+    btnAdvanced.Name = "btnAdvanced";
+    btnAdvanced.Size = new Size(75, 23);
+    btnAdvanced.TabIndex = 12;
+    btnAdvanced.Text = "Advanced...";
+    btnAdvanced.UseVisualStyleBackColor = true;
+    btnAdvanced.Click += btnAdvanced_Click;
+    //
+    // btnClose
+    //
     btnClose.Anchor = AnchorStyles.Top | AnchorStyles.Right;
     btnClose.Location = new Point(422, 363);
     btnClose.Name = "btnClose";
     btnClose.Size = new Size(75, 23);
-    btnClose.TabIndex = 12;
+    btnClose.TabIndex = 13;
     btnClose.Text = "Close";
     btnClose.UseVisualStyleBackColor = true;
     btnClose.Click += btnClose_Click;
