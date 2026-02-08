@@ -19,6 +19,10 @@ namespace GBSql.Data;
 public interface IGameBaseRepository : IDisposable
 {
   /// <summary>
+  /// Gets the database path for the active repository.
+  /// </summary>
+  string DatabasePath { get; }
+  /// <summary>
   /// Executes a custom SQL query and returns results.
   /// </summary>
   Task<IEnumerable<T>> QueryAsync<T>(string sql, object? parameters = null) where T : new();

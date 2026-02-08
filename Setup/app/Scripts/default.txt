@@ -1,3 +1,0 @@
-Add_CLP(%gamepathfile%)
-Run_Emulator()
-

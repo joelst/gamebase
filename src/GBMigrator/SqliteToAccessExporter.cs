@@ -48,6 +48,9 @@ public class SqliteToAccessExporter
     // Validate OleDb provider is available
     ValidateOleDbProvider();
 
+    // Validate ADOX is available for Access database creation
+    ValidateAdoxAvailable();
+
     // Create Access database with schema
     ReportProgress("Creating Access database...");
     CreateAccessDatabase();
@@ -152,7 +155,8 @@ public class SqliteToAccessExporter
           [V_LengthType] LONG,
           [ReviewRating] LONG,
           [Comment] MEMO,
-          [Filename] TEXT(255)
+          [Filename] TEXT(255),
+          [ScreenshotFilename] TEXT(255)
         )";
       cmd.ExecuteNonQuery();
     }
@@ -166,8 +170,7 @@ public class SqliteToAccessExporter
           [GA_Id] LONG,
           [Name] TEXT(255),
           [Filename] TEXT(255),
-          [Path] TEXT(255),
-          [Type] TEXT(50)
+          [EX_Type] LONG
         )";
       cmd.ExecuteNonQuery();
     }
@@ -266,7 +269,7 @@ public class SqliteToAccessExporter
       SELECT GA_Id, Name, CCode, PU_Id, YE_Id, PR_Id, MU_Id, LA_Id, GE_Id, PG_Id,
              DI_Id, CR_Id, AR_Id, DE_Id, LI_Id, RA_Id, Fav, Classic, Adult,
              PlayersFrom, PlayersTo, Prequel, Sequel, Related, CloneOf,
-             V_Trainers, V_Length, V_LengthType, ReviewRating, Comment, Filename
+            V_Trainers, V_Length, V_LengthType, ReviewRating, Comment, Filename, ScreenshotFilename
       FROM Games";
 
     int count = 0;
@@ -279,10 +282,10 @@ public class SqliteToAccessExporter
           [GA_Id], [Name], [CCode], [PU_Id], [YE_Id], [PR_Id], [MU_Id], [LA_Id], [GE_Id], [PG_Id],
           [DI_Id], [CR_Id], [AR_Id], [DE_Id], [LI_Id], [RA_Id], [Fav], [Classic], [Adult],
           [PlayersFrom], [PlayersTo], [Prequel], [Sequel], [Related], [CloneOf],
-          [V_Trainers], [V_Length], [V_LengthType], [ReviewRating], [Comment], [Filename]
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          [V_Trainers], [V_Length], [V_LengthType], [ReviewRating], [Comment], [Filename], [ScreenshotFilename]
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-      for (int i = 0; i < 31; i++)
+      for (int i = 0; i < 32; i++)
       {
         insertCmd.Parameters.Add(new OleDbParameter($"@p{i}", reader.IsDBNull(i) ? DBNull.Value : reader.GetValue(i)));
       }
@@ -308,7 +311,7 @@ public class SqliteToAccessExporter
     await accessConn.OpenAsync();
 
     using var selectCmd = sqliteConn.CreateCommand();
-    selectCmd.CommandText = "SELECT EX_Id, GA_Id, Name, Filename, Path, Type FROM Extras";
+    selectCmd.CommandText = "SELECT EX_Id, GA_Id, Name, Filename, EX_Type FROM Extras";
 
     int count = 0;
     using var reader = await selectCmd.ExecuteReaderAsync();
@@ -316,15 +319,14 @@ public class SqliteToAccessExporter
     {
       using var insertCmd = accessConn.CreateCommand();
       insertCmd.CommandText = @"
-        INSERT INTO [Extras] ([EX_Id], [GA_Id], [Name], [Filename], [Path], [Type])
-        VALUES (?, ?, ?, ?, ?, ?)";
+        INSERT INTO [Extras] ([EX_Id], [GA_Id], [Name], [Filename], [EX_Type])
+        VALUES (?, ?, ?, ?, ?)";
 
       insertCmd.Parameters.Add(new OleDbParameter("@EX_Id", reader.IsDBNull(0) ? DBNull.Value : reader.GetInt32(0)));
       insertCmd.Parameters.Add(new OleDbParameter("@GA_Id", reader.IsDBNull(1) ? DBNull.Value : reader.GetInt32(1)));
       insertCmd.Parameters.Add(new OleDbParameter("@Name", reader.IsDBNull(2) ? DBNull.Value : reader.GetString(2)));
       insertCmd.Parameters.Add(new OleDbParameter("@Filename", reader.IsDBNull(3) ? DBNull.Value : reader.GetString(3)));
-      insertCmd.Parameters.Add(new OleDbParameter("@Path", reader.IsDBNull(4) ? DBNull.Value : reader.GetString(4)));
-      insertCmd.Parameters.Add(new OleDbParameter("@Type", reader.IsDBNull(5) ? DBNull.Value : reader.GetString(5)));
+      insertCmd.Parameters.Add(new OleDbParameter("@EX_Type", reader.IsDBNull(4) ? DBNull.Value : reader.GetValue(4)));
 
       await insertCmd.ExecuteNonQueryAsync();
 
@@ -352,6 +354,32 @@ public class SqliteToAccessExporter
       throw new InvalidOperationException(
         "Microsoft Access Database Engine (ACE) provider not found. " +
         "Please install the Microsoft Access Database Engine 2016 Redistributable. " +
+        "Download: https://www.microsoft.com/en-us/download/details.aspx?id=54920",
+        ex);
+    }
+  }
+
+  private void ValidateAdoxAvailable()
+  {
+    try
+    {
+      var adoxType = Type.GetTypeFromProgID("ADOX.Catalog");
+      if (adoxType == null)
+      {
+        throw new InvalidOperationException(
+          "ADOX is not available. Install the Microsoft Access Database Engine (ACE). " +
+          "Download: https://www.microsoft.com/en-us/download/details.aspx?id=54920");
+      }
+    }
+    catch (InvalidOperationException)
+    {
+      throw;
+    }
+    catch (Exception ex)
+    {
+      throw new InvalidOperationException(
+        "Unable to initialize ADOX for Access database creation. " +
+        "Install the Microsoft Access Database Engine (ACE). " +
         "Download: https://www.microsoft.com/en-us/download/details.aspx?id=54920",
         ex);
     }

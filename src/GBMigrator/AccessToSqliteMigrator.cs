@@ -136,13 +136,16 @@ public class AccessToSqliteMigrator
     using var accessConn = new OleDbConnection(GetAccessConnectionString());
     await accessConn.OpenAsync();
 
+    bool hasScreenshotFilename = await ColumnExistsAsync(accessConn, "Games", "ScreenshotFilename");
+
     using var cmd = accessConn.CreateCommand();
     cmd.CommandText = @"
-      SELECT GA_Id, Name, CCode, PU_Id, YE_Id, PR_Id, MU_Id, LA_Id, GE_Id, PG_Id,
-             DI_Id, CR_Id, AR_Id, DE_Id, LI_Id, RA_Id, Fav, Classic, Adult,
-             PlayersFrom, PlayersTo, Prequel, Sequel, Related, CloneOf,
-             V_Trainers, V_Length, V_LengthType, ReviewRating, Comment, Filename
-      FROM Games";
+          SELECT GA_Id, Name, CCode, PU_Id, YE_Id, PR_Id, MU_Id, LA_Id, GE_Id, PG_Id,
+            DI_Id, CR_Id, AR_Id, DE_Id, LI_Id, RA_Id, Fav, Classic, Adult,
+            PlayersFrom, PlayersTo, Prequel, Sequel, Related, CloneOf,
+            V_Trainers, V_Length, V_LengthType, ReviewRating, Comment, Filename" +
+        (hasScreenshotFilename ? ", ScreenshotFilename" : "") + @"
+          FROM Games";
 
     int count = 0;
     using var reader = await cmd.ExecuteReaderAsync();
@@ -153,12 +156,14 @@ public class AccessToSqliteMigrator
           GA_Id, Name, CCode, PU_Id, YE_Id, PR_Id, MU_Id, LA_Id, GE_Id, PG_Id,
           DI_Id, CR_Id, AR_Id, DE_Id, LI_Id, RA_Id, Fav, Classic, Adult,
           PlayersFrom, PlayersTo, Prequel, Sequel, Related, CloneOf,
-          V_Trainers, V_Length, V_LengthType, ReviewRating, Comment, Filename
+          V_Trainers, V_Length, V_LengthType, ReviewRating, Comment, Filename" +
+          (hasScreenshotFilename ? ", ScreenshotFilename" : "") + @"
         ) VALUES (
           @GA_Id, @Name, @CCode, @PU_Id, @YE_Id, @PR_Id, @MU_Id, @LA_Id, @GE_Id, @PG_Id,
           @DI_Id, @CR_Id, @AR_Id, @DE_Id, @LI_Id, @RA_Id, @Fav, @Classic, @Adult,
           @PlayersFrom, @PlayersTo, @Prequel, @Sequel, @Related, @CloneOf,
-          @V_Trainers, @V_Length, @V_LengthType, @ReviewRating, @Comment, @Filename
+          @V_Trainers, @V_Length, @V_LengthType, @ReviewRating, @Comment, @Filename" +
+          (hasScreenshotFilename ? ", @ScreenshotFilename" : "") + @"
         )",
         new
         {
@@ -192,7 +197,8 @@ public class AccessToSqliteMigrator
           V_LengthType = GetInt32OrNull(reader, 27),
           ReviewRating = GetInt32OrNull(reader, 28),
           Comment = GetStringOrNull(reader, 29),
-          Filename = GetStringOrNull(reader, 30)
+          Filename = GetStringOrNull(reader, 30),
+          ScreenshotFilename = hasScreenshotFilename ? GetStringOrNull(reader, 31) : null
         });
 
       count++;
@@ -255,6 +261,13 @@ public class AccessToSqliteMigrator
     return schema.Rows.Cast<DataRow>().Any(row =>
       row["TABLE_NAME"].ToString()?.Equals(tableName, StringComparison.OrdinalIgnoreCase) == true &&
       row["TABLE_TYPE"].ToString() == "TABLE");
+  }
+
+  private static async Task<bool> ColumnExistsAsync(OleDbConnection conn, string tableName, string columnName)
+  {
+    var schema = await conn.GetSchemaAsync("Columns", new[] { null, null, tableName, null });
+    return schema.Rows.Cast<DataRow>().Any(row =>
+      row["COLUMN_NAME"].ToString()?.Equals(columnName, StringComparison.OrdinalIgnoreCase) == true);
   }
 
   private string GetAccessConnectionString()

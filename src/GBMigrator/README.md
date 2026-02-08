@@ -1,12 +1,13 @@
-# GBMigrator - GameBase Access to SQLite Migration Tool
+# GBMigrator - GameBase Import/Export Tool
 
 ## Overview
-Command-line utility to migrate GameBase data from Microsoft Access (.mdb) to SQLite databases.
+Command-line utility to import GameBase data from Microsoft Access (.mdb) to SQLite and export back to Access for backward compatibility.
 
 ## Requirements
 - **.NET 8.0 Runtime** (Windows only)
 - **Windows OS** - Required for OleDb Access database provider
 - **Microsoft Access Database Engine** (2016 or later) or **Microsoft Jet 4.0 OLEDB Provider**
+- **ADOX** (installed with the Access Database Engine) for Access export
 
 ⚠️ **Platform Limitation**: This tool can only run on Windows because the OleDb provider for Microsoft Access databases is Windows-only.
 
@@ -42,6 +43,18 @@ Example:
 GBMigrator C:\GameBase\GameBase.mdb C:\Users\YourName\AppData\Roaming\GameBase\Data\GameBase.db
 ```
 
+### SQLite to Access Export
+
+```bash
+GBMigrator export <sqlite-db-path> <access-db-path>
+```
+
+Example:
+
+```bash
+GBMigrator export C:\Users\YourName\AppData\Roaming\GameBase\Data\GameBase.db C:\GameBase\GameBase.mdb
+```
+
 ### Diff Utility (SQLite)
 
 ```bash
@@ -73,6 +86,19 @@ The tool migrates the following tables:
 - **Games** - Complete game records with all fields
 - **Extras** - Game extras/additional content
 
+## What Gets Exported
+
+The export uses the same table coverage as import:
+
+### Lookup Tables (13 tables)
+- Publishers, Years, Programmers, Musicians, Languages
+- Genres, PGenres (Parent Genres), Difficulty, Crackers, Artists
+- Developers, Licenses, Rarities
+
+### Main Tables
+- **Games** - Includes `ScreenshotFilename` when present
+- **Extras** - Uses `EX_Type` (matches SQLite schema)
+
 ## Features
 
 ✅ **Preserves IDs** - All primary keys and foreign keys are maintained
@@ -80,6 +106,7 @@ The tool migrates the following tables:
 ✅ **Schema detection** - Skips missing tables gracefully
 ✅ **Overwrite protection** - Prompts before replacing existing SQLite database
 ✅ **Null handling** - Correctly handles nullable fields from Access
+✅ **Backward compatibility** - Export produces Access `.mdb` for VB6 GameBase
 
 ## Build from Source
 
@@ -98,6 +125,12 @@ Run the diff tool from source:
 
 ```bash
 dotnet run --project src/GBMigrator/GBMigrator.csproj -- diff "path/to/current.db" "path/to/backup.db" "path/to/update.db"
+```
+
+Run export from source:
+
+```bash
+dotnet run --project src/GBMigrator/GBMigrator.csproj -- export "path/to/source.db" "path/to/target.mdb"
 ```
 
 ## Troubleshooting

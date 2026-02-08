@@ -350,16 +350,16 @@ public partial class ImportDatabaseForm : Form
 
       DialogResult = DialogResult.OK;
     }
-    catch (InvalidOperationException ex) when (ex.Message.Contains("provider") || ex.Message.Contains("Provider"))
+    catch (InvalidOperationException ex) when (ex.Message.Contains("provider") || ex.Message.Contains("Provider") || ex.Message.Contains("ACE") || ex.Message.Contains("ADOX"))
     {
       Log("");
       Log($"ERROR: {ex.Message}");
       Log("");
-      Log("Microsoft Access Database Engine not found.");
+      Log("Microsoft Access Database Engine (ACE) or ADOX not found.");
       Log("Download: https://www.microsoft.com/en-us/download/details.aspx?id=54920");
 
       MessageBox.Show(
-        "Microsoft Access Database Engine not found.\n\n" +
+        "Microsoft Access Database Engine (ACE) or ADOX not found.\n\n" +
         "Please install the Microsoft Access Database Engine:\n" +
         "https://www.microsoft.com/en-us/download/details.aspx?id=54920\n\n" +
         "Install the version matching your system (x64 or x86).",

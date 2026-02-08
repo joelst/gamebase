@@ -13,7 +13,7 @@ public partial class SplashForm : Form
   {
     // Detect if system is using dark mode
     bool isDarkMode = IsDarkModeEnabled();
-    
+
     if (isDarkMode)
     {
       // Dark theme
@@ -35,7 +35,7 @@ public partial class SplashForm : Form
       // Check Windows Registry for dark mode setting
       using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
         @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-      
+
       if (key != null)
       {
         var appsUseLightTheme = key.GetValue("AppsUseLightTheme");
@@ -65,13 +65,13 @@ public partial class SplashForm : Form
       if (stream != null)
       {
         var image = Image.FromStream(stream);
-        
+
         // Make the image background transparent if it's a GIF
         if (image is Bitmap bitmap)
         {
           bitmap.MakeTransparent(Color.White); // Make white background transparent
         }
-        
+
         picLogo.Image = image;
       }
     }

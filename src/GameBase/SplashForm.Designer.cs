@@ -55,7 +55,7 @@ partial class SplashForm
     lblStatus.Name = "lblStatus";
     lblStatus.Size = new Size(83, 15);
     lblStatus.TabIndex = 1;
-    lblStatus.Text = "Loading...";
+    lblStatus.Text = "In A.D. 2026 GameBase.NET is set us up!";
     //
     // progressBar
     //

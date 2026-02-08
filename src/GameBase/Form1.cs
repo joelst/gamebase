@@ -700,31 +700,7 @@ public partial class Form1 : Form
 
     private void exportToAccessDatabaseToolStripMenuItem_Click(object? sender, EventArgs e)
     {
-        // Get current database path from repository context
-        string currentDbPath = string.Empty;
-        try
-        {
-            var contextType = _repository.GetType();
-            var contextField = contextType.GetField("_context", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (contextField != null)
-            {
-                var context = contextField.GetValue(_repository);
-                if (context != null)
-                {
-                    var dbPathProp = context.GetType().GetProperty("DatabasePath");
-                    if (dbPathProp != null)
-                    {
-                        currentDbPath = dbPathProp.GetValue(context)?.ToString() ?? string.Empty;
-                    }
-                }
-            }
-        }
-        catch
-        {
-            // If we can't get the path via reflection, user will need to browse for it
-        }
-
-        using var exportForm = new ExportDatabaseForm(currentDbPath);
+        using var exportForm = new ExportDatabaseForm(_repository.DatabasePath);
         if (exportForm.ShowDialog() == DialogResult.OK)
         {
             MessageBox.Show(

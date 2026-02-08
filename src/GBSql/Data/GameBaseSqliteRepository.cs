@@ -23,6 +23,8 @@ public class GameBaseSqliteRepository : IGameBaseRepository
   private readonly GameBaseSqliteContext _context;
   private bool _disposed;
 
+  public string DatabasePath => _context.DatabasePath;
+
   public GameBaseSqliteRepository(GameBaseSqliteContext context)
   {
     _context = context ?? throw new ArgumentNullException(nameof(context));
