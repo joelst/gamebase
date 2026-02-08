@@ -86,8 +86,12 @@ public class GameBaseSqliteContext : IDisposable
         V_LengthType INTEGER,
         ReviewRating INTEGER,
         Comment TEXT,
-        Filename TEXT
+        Filename TEXT,
+        ScreenshotFilename TEXT
       )");
+
+    // Add ScreenshotFilename if missing
+    await EnsureColumnExists(conn, "Games", "ScreenshotFilename", "TEXT");
 
     // Create lookup tables
     var lookupTables = new[]
@@ -138,6 +142,30 @@ public class GameBaseSqliteContext : IDisposable
     // Create indexes for common queries
     await ExecuteNonQueryAsync("CREATE INDEX IF NOT EXISTS idx_games_name ON Games(Name)");
     await ExecuteNonQueryAsync("CREATE INDEX IF NOT EXISTS idx_extras_ga_id ON Extras(GA_Id)");
+  }
+
+  private static async Task EnsureColumnExists(SqliteConnection conn, string table, string column, string type)
+  {
+    using var cmd = conn.CreateCommand();
+    cmd.CommandText = $"PRAGMA table_info({table});";
+    var exists = false;
+    using (var reader = await cmd.ExecuteReaderAsync())
+    {
+      while (await reader.ReadAsync())
+      {
+        if (reader.GetString(1).Equals(column, StringComparison.OrdinalIgnoreCase))
+        {
+          exists = true;
+          break;
+        }
+      }
+    }
+    if (!exists)
+    {
+      using var alter = conn.CreateCommand();
+      alter.CommandText = $"ALTER TABLE {table} ADD COLUMN {column} {type};";
+      await alter.ExecuteNonQueryAsync();
+    }
   }
 
   /// <summary>

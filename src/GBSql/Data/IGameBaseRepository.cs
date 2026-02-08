@@ -49,6 +49,11 @@ public interface IGameBaseRepository : IDisposable
   Task<IEnumerable<ExtraEntity>> GetExtrasForGameAsync(int gaId);
 
   /// <summary>
+  /// Inserts or updates a game. Returns the resulting GA_Id.
+  /// </summary>
+  Task<int> UpsertGameAsync(GameEntity game);
+
+  /// <summary>
   /// Inserts or updates an extra. Returns the resulting EX_Id.
   /// </summary>
   Task<int> UpsertExtraAsync(ExtraEntity extra);

@@ -17,7 +17,7 @@ partial class GameInfoPropsForm
 
   private TableLayoutPanel tableLayoutPanel1;
   private Button btnClose;
-
+  private Button btnSave;
   private Label lblName;
   private TextBox txtName;
   private Label lblCCode;
@@ -197,7 +197,7 @@ partial class GameInfoPropsForm
     ConfigureTextBox(txtFilename);
     ConfigureLabel(lblComment, "Comment:");
     rtbComment.Dock = DockStyle.Fill;
-    rtbComment.ReadOnly = true;
+    rtbComment.ReadOnly = false;
     //
     // btnClose
     //

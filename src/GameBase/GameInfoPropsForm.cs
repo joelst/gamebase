@@ -1,9 +1,11 @@
+using GBSql.Data;
 using GBSql.Models;
 
 namespace GameBase;
 
 public partial class GameInfoPropsForm : Form
 {
+  private readonly IGameBaseRepository _repository;
   private readonly GameEntity _game;
   private readonly Dictionary<int, string> _years;
   private readonly Dictionary<int, string> _publishers;
@@ -19,7 +21,7 @@ public partial class GameInfoPropsForm : Form
   private readonly Dictionary<int, string> _licenses;
   private readonly Dictionary<int, string> _rarities;
 
-  public GameInfoPropsForm(GameEntity game,
+  public GameInfoPropsForm(IGameBaseRepository repository, GameEntity game,
       Dictionary<int, string> years,
       Dictionary<int, string> publishers,
       Dictionary<int, string> programmers,
@@ -34,6 +36,7 @@ public partial class GameInfoPropsForm : Form
       Dictionary<int, string> licenses,
       Dictionary<int, string> rarities)
   {
+    _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     _game = game;
     _years = years;
     _publishers = publishers;
@@ -80,6 +83,14 @@ public partial class GameInfoPropsForm : Form
 
   private static string Resolve(Dictionary<int, string> map, int? id)
       => id.HasValue && map.TryGetValue(id.Value, out var name) ? name : string.Empty;
+
+  private async void btnSave_Click(object? sender, EventArgs e)
+  {
+    _game.Comment = rtbComment.Text;
+    _game.ReviewRating = int.TryParse(txtReviewRating.Text, out var rr) ? rr : _game.ReviewRating;
+    await _repository.UpsertGameAsync(_game);
+    MessageBox.Show(this, "Game saved.", "Game", MessageBoxButtons.OK, MessageBoxIcon.Information);
+  }
 
   private void btnClose_Click(object? sender, EventArgs e)
   {

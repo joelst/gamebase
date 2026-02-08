@@ -1,3 +1,4 @@
+using GBSql.Data;
 using GBSql.Models;
 
 namespace GameBase;
@@ -19,7 +20,7 @@ public partial class GameDetailsForm : Form
   private readonly Dictionary<int, string> _difficulty;
   private readonly Dictionary<int, string> _crackers;
 
-  public GameDetailsForm(GameEntity game,
+  public GameDetailsForm(IGameBaseRepository repository, GameEntity game,
       Dictionary<int, string> years,
       Dictionary<int, string> publishers,
       Dictionary<int, string> programmers,
@@ -34,6 +35,7 @@ public partial class GameDetailsForm : Form
       Dictionary<int, string> difficulty,
       Dictionary<int, string> crackers)
   {
+    _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     _game = game ?? throw new ArgumentNullException(nameof(game));
     _years = years ?? throw new ArgumentNullException(nameof(years));
     _publishers = publishers ?? throw new ArgumentNullException(nameof(publishers));
@@ -83,6 +85,8 @@ public partial class GameDetailsForm : Form
     }
   }
 
+  private readonly IGameBaseRepository _repository;
+
   private record ComboItem(int Id, string Name)
   {
     public override string ToString() => Name;
@@ -90,7 +94,7 @@ public partial class GameDetailsForm : Form
 
   private void btnAdvanced_Click(object? sender, EventArgs e)
   {
-    using var dlg = new GameInfoPropsForm(_game, _years, _publishers, _programmers, _musicians, _languages,
+    using var dlg = new GameInfoPropsForm(_repository, _game, _years, _publishers, _programmers, _musicians, _languages,
         _genres, _pgenres, _difficulty, _crackers, _artists, _developers, _licenses, _rarities);
     dlg.ShowDialog(this);
   }

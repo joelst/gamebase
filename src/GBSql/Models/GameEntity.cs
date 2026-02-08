@@ -47,6 +47,7 @@ public class GameEntity
   public int? ReviewRating { get; set; }
   public string? Comment { get; set; }
   public string? Filename { get; set; }
+  public string? ScreenshotFilename { get; set; }
 }
 
 /// <summary>

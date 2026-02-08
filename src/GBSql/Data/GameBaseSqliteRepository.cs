@@ -109,6 +109,34 @@ public class GameBaseSqliteRepository : IGameBaseRepository
     return await QueryAsync<GameEntity>(sql);
   }
 
+  public async Task<int> UpsertGameAsync(GameEntity game)
+  {
+    var conn = await _context.GetConnectionAsync();
+    using var cmd = conn.CreateCommand();
+
+    if (game.GA_Id > 0)
+    {
+      cmd.CommandText = @"UPDATE Games SET Name=@Name, CCode=@CCode, PU_Id=@PU_Id, YE_Id=@YE_Id, PR_Id=@PR_Id,
+MU_Id=@MU_Id, LA_Id=@LA_Id, GE_Id=@GE_Id, PG_Id=@PG_Id, DI_Id=@DI_Id, CR_Id=@CR_Id, AR_Id=@AR_Id, DE_Id=@DE_Id,
+LI_Id=@LI_Id, RA_Id=@RA_Id, Fav=@Fav, Classic=@Classic, Adult=@Adult, PlayersFrom=@PlayersFrom, PlayersTo=@PlayersTo,
+Prequel=@Prequel, Sequel=@Sequel, Related=@Related, CloneOf=@CloneOf, V_Trainers=@V_Trainers, V_Length=@V_Length,
+V_LengthType=@V_LengthType, ReviewRating=@ReviewRating, Comment=@Comment, Filename=@Filename, ScreenshotFilename=@ScreenshotFilename
+WHERE GA_Id=@GA_Id";
+      AddParameters(cmd, game);
+      await cmd.ExecuteNonQueryAsync();
+      return game.GA_Id;
+    }
+    else
+    {
+      cmd.CommandText = @"INSERT INTO Games (Name, CCode, PU_Id, YE_Id, PR_Id, MU_Id, LA_Id, GE_Id, PG_Id, DI_Id, CR_Id, AR_Id, DE_Id, LI_Id, RA_Id, Fav, Classic, Adult, PlayersFrom, PlayersTo, Prequel, Sequel, Related, CloneOf, V_Trainers, V_Length, V_LengthType, ReviewRating, Comment, Filename, ScreenshotFilename)
+VALUES (@Name, @CCode, @PU_Id, @YE_Id, @PR_Id, @MU_Id, @LA_Id, @GE_Id, @PG_Id, @DI_Id, @CR_Id, @AR_Id, @DE_Id, @LI_Id, @RA_Id, @Fav, @Classic, @Adult, @PlayersFrom, @PlayersTo, @Prequel, @Sequel, @Related, @CloneOf, @V_Trainers, @V_Length, @V_LengthType, @ReviewRating, @Comment, @Filename, @ScreenshotFilename);
+SELECT last_insert_rowid();";
+      AddParameters(cmd, game);
+      var result = await cmd.ExecuteScalarAsync();
+      return Convert.ToInt32(result);
+    }
+  }
+
   public async Task<IEnumerable<GameEntity>> SearchGamesByNameAsync(string searchTerm)
   {
     return await QueryAsync<GameEntity>(

@@ -49,6 +49,8 @@ partial class Form1
     private ToolStripMenuItem manageExtrasToolStripMenuItem;
     private ToolStripSeparator toolStripSeparator1;
     private ToolStripMenuItem customViewsToolStripMenuItem;
+    private ToolStripMenuItem quickFilterToolStripMenuItem;
+    private ToolStripMenuItem clearFiltersToolStripMenuItem;
     private ToolStripMenuItem aboutToolStripMenuItem;
     private TextBox txtSearch;
     private Label lblSearch;
@@ -120,9 +122,7 @@ partial class Form1
         //
         // viewToolStripMenuItem
         //
-        viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customViewsToolStripMenuItem });
-        viewToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
-        viewToolStripMenuItem.DropDownItems.Add(new ToolStripMenuItem("Quick &Filter...", null, quickFilterToolStripMenuItem_Click));
+        viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customViewsToolStripMenuItem, quickFilterToolStripMenuItem, clearFiltersToolStripMenuItem });
         viewToolStripMenuItem.Name = "viewToolStripMenuItem";
         viewToolStripMenuItem.Size = new Size(44, 20);
         viewToolStripMenuItem.Text = "&View";
@@ -130,8 +130,24 @@ partial class Form1
         // customViewsToolStripMenuItem
         //
         customViewsToolStripMenuItem.Name = "customViewsToolStripMenuItem";
-        customViewsToolStripMenuItem.Size = new Size(156, 22);
+        customViewsToolStripMenuItem.Size = new Size(180, 22);
         customViewsToolStripMenuItem.Text = "Custom &Views...";
+        //
+        // quickFilterToolStripMenuItem
+        //
+        quickFilterToolStripMenuItem = new ToolStripMenuItem();
+        quickFilterToolStripMenuItem.Name = "quickFilterToolStripMenuItem";
+        quickFilterToolStripMenuItem.Size = new Size(180, 22);
+        quickFilterToolStripMenuItem.Text = "Quick &Filter...";
+        quickFilterToolStripMenuItem.Click += quickFilterToolStripMenuItem_Click;
+        //
+        // clearFiltersToolStripMenuItem
+        //
+        clearFiltersToolStripMenuItem = new ToolStripMenuItem();
+        clearFiltersToolStripMenuItem.Name = "clearFiltersToolStripMenuItem";
+        clearFiltersToolStripMenuItem.Size = new Size(180, 22);
+        clearFiltersToolStripMenuItem.Text = "Clear Filters";
+        clearFiltersToolStripMenuItem.Click += clearFiltersToolStripMenuItem_Click;
         //
         // gameToolStripMenuItem
         //

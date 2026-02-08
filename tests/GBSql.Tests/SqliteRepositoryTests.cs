@@ -124,6 +124,20 @@ public class SqliteRepositoryTests : IDisposable
   }
 
   [Fact]
+  public async Task UpsertGameAsync_UpdatesFields()
+  {
+    var game = (await _repository.GetGameByIdAsync(1))!;
+    game.Comment = "Updated";
+    game.ReviewRating = 5;
+    game.ScreenshotFilename = "shot.png";
+    await _repository.UpsertGameAsync(game);
+    var updated = await _repository.GetGameByIdAsync(1);
+    Assert.Equal("Updated", updated!.Comment);
+    Assert.Equal(5, updated.ReviewRating);
+    Assert.Equal("shot.png", updated.ScreenshotFilename);
+  }
+
+  [Fact]
   public async Task GetLookupTableAsync_ReturnsPublishers()
   {
     // Act

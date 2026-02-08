@@ -198,8 +198,14 @@ public partial class Form1 : Form
 
     private void LoadScreenshot(GameEntity game)
     {
-        // Placeholder for future screenshot support
         picScreenshot.Image = null;
+        if (string.IsNullOrWhiteSpace(game.ScreenshotFilename)) return;
+        var path = Path.Combine(GetScreenshotsPath(), game.ScreenshotFilename);
+        if (File.Exists(path))
+        {
+            try { picScreenshot.Image = Image.FromFile(path); }
+            catch { /* ignore */ }
+        }
     }
 
     private void ClearGameDetails()
@@ -261,6 +267,25 @@ public partial class Form1 : Form
             _customMatchAny = false;
             ApplyCustomFilters();
         }
+    }
+
+    private void clearFiltersToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        _customFilters.Clear();
+        _customMatchAny = false;
+        txtSearch.Text = string.Empty;
+        _filteredGames = new List<GameEntity>(_allGames);
+        UpdateGameGrid();
+    }
+
+    private string GetScreenshotsPath()
+    {
+        var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        var basePath = string.IsNullOrWhiteSpace(appData)
+            ? AppContext.BaseDirectory
+            : Path.Combine(appData, "GameBase", "Screenshots");
+        Directory.CreateDirectory(basePath);
+        return basePath;
     }
 
     private void ApplyCustomFilters()
@@ -332,7 +357,7 @@ public partial class Form1 : Form
         var game = _filteredGames.FirstOrDefault(g => g.GA_Id == selectedId);
         if (game == null) return;
 
-        using var dlg = new GameDetailsForm(game, _years, _publishers, _programmers, _genres,
+        using var dlg = new GameDetailsForm(_repository, game, _years, _publishers, _programmers, _genres,
             _musicians, _languages, _artists, _developers, _licenses, _rarities, _pgenres, _difficulty, _crackers);
         dlg.ShowDialog(this);
     }
