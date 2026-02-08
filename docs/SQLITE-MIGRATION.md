@@ -71,6 +71,7 @@ Successfully migrated GameBase from Access database to SQLite with a modern repo
 2. Use `DatabaseMigration.CreateNewDatabaseAsync()` to initialize
 3. Query using repository methods or `ExecuteQueryAsync()` for custom SQL
 4. Set `QueryBuilder.UseSqliteSyntax = true` (default)
+5. **Defaults**: Database path `%AppData%\GameBase\Data\GameBase.db`; override with `GAMEBASE_DB_PATH` or `Gemus.ini [Settings] DatabasePath`.
 
 ## Files Changed
 **Created (10 files):**

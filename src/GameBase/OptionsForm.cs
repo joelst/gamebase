@@ -11,9 +11,14 @@ namespace GameBase
 
     private void OptionsForm_Load(object sender, EventArgs e)
     {
-      txtBasePath.Text = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+      string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+      string basePathRoot = string.IsNullOrWhiteSpace(appData)
+          ? AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+          : appData;
+      string defaultBase = Path.Combine(basePathRoot, "GameBase");
+      txtBasePath.Text = defaultBase;
       txtGbName.Text = "GameBase";
-      txtDbPath.Text = Path.Combine(txtBasePath.Text, txtGbName.Text, "Data", "GameBase.db");
+      txtDbPath.Text = Path.Combine(defaultBase, "Data", "GameBase.db");
       cmbBackend.DataSource = Enum.GetValues(typeof(ArchiveBackend));
 
       TryLoadExisting();
@@ -43,7 +48,11 @@ namespace GameBase
 
     private string GetGemusIniPath()
     {
-      return Path.Combine(txtBasePath.Text, txtGbName.Text, "Gemus.ini");
+      string basePath = txtBasePath.Text;
+      string candidate = Path.Combine(basePath, "Gemus.ini");
+      if (File.Exists(candidate) || Directory.Exists(basePath))
+        return candidate;
+      return Path.Combine(basePath, txtGbName.Text, "Gemus.ini");
     }
 
     private void btnBrowse_Click(object sender, EventArgs e)

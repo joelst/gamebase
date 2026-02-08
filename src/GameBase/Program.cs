@@ -21,9 +21,13 @@ static class Program
 
     private static GameBaseSqliteRepository CreateRepository()
     {
-        string basePath = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        string gbName = "GameBase";
-        string gemusIni = Path.Combine(basePath, gbName, "Gemus.ini");
+        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string basePathRoot = string.IsNullOrWhiteSpace(appData)
+            ? AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            : appData;
+        string basePath = Path.Combine(basePathRoot, "GameBase");
+        Directory.CreateDirectory(basePath);
+        string gemusIni = Path.Combine(basePath, "Gemus.ini");
 
         // Env override
         string? dbPath = Environment.GetEnvironmentVariable("GAMEBASE_DB_PATH");
@@ -34,7 +38,7 @@ static class Program
 
         if (string.IsNullOrWhiteSpace(dbPath))
         {
-            dbPath = Path.Combine(basePath, gbName, "Data", "GameBase.db");
+            dbPath = Path.Combine(basePath, "Data", "GameBase.db");
             Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
             // Persist default path for future runs
             GemusIniHelper.WriteIniValue("Settings", "DatabasePath", dbPath, gemusIni);
