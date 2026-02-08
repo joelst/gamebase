@@ -119,7 +119,7 @@ internal class DatabaseSynchronizer
   {
     using var command = connection.CreateCommand();
     command.CommandText = @"
-      INSERT INTO Music (Filename, Name, Author, Copyright, Songs, DefaultSong) 
+      INSERT INTO Music (Filename, Name, Author, Copyright, Songs, DefaultSong)
       VALUES (@filename, @name, @author, @copyright, @songs, @defaultSong)";
 
     command.Parameters.AddWithValue("@filename", sid.RelativePath);
