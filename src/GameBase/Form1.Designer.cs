@@ -66,6 +66,7 @@ partial class Form1
 
     private void InitializeComponent()
     {
+        components = new System.ComponentModel.Container();
         menuStrip1 = new MenuStrip();
         fileToolStripMenuItem = new ToolStripMenuItem();
         exitToolStripMenuItem = new ToolStripMenuItem();
