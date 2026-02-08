@@ -1,6 +1,7 @@
 using GBSql.Data;
 using GBSql.Models;
 using Gemus;
+using GBFuncs;
 
 namespace GameBase;
 
@@ -31,14 +32,47 @@ public partial class Form1 : Form
     public Form1(IGameBaseRepository repository)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        // TODO: Properly initialize GemusEngine with required dependencies
-        // For now, game launching will show a configuration message
-        _gemusEngine = null;
+        _gemusEngine = InitializeGemusEngine();
         InitializeComponent();
         Load += Form1_Load;
         editGameToolStripMenuItem.Click += editGameToolStripMenuItem_Click;
         manageExtrasToolStripMenuItem.Click += manageExtrasToolStripMenuItem_Click;
         picScreenshot.DoubleClick += picScreenshot_DoubleClick;
+    }
+
+    private GemusEngine? InitializeGemusEngine()
+    {
+        try
+        {
+            var funcs = new FunctionsHelper();
+            var registry = new RegistryService();
+            var logger = new GemusLogger();
+            var unpacker = new ArchiveUnpacker();
+
+            var engine = new GemusEngine(funcs, registry, logger, unpacker);
+
+            // Set app context
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string basePathRoot = string.IsNullOrWhiteSpace(appData)
+                ? AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                : appData;
+            string basePath = Path.Combine(basePathRoot, "GameBase");
+            
+            // Ensure directory exists
+            Directory.CreateDirectory(basePath);
+            
+            engine.SetAppContext(basePath + Path.DirectorySeparatorChar, string.Empty, "GameBase");
+            engine.Init("GameBase");
+            engine.SetSilentMode(false);
+
+            return engine;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to initialize GEMUS engine: {ex.Message}\n\nGame launching will be disabled.",
+                "Initialization Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return null;
+        }
     }
 
     private async void Form1_Load(object? sender, EventArgs e)
@@ -452,11 +486,83 @@ public partial class Form1 : Form
                 "To enable game launching:\n" +
                 "1. Configure emulators in Options\n" +
                 "2. Set game paths and scripts\n" +
-                "3. Ensure GEMUS.ini is configured\n\n" +
+                "3. Ensure Emulators.ini is configured\n\n" +
                 $"Game: {game.Name}\nFile: {game.Filename}",
                 "Configuration Required",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
+        }
+
+        if (string.IsNullOrWhiteSpace(game.Filename))
+        {
+            MessageBox.Show($"No filename specified for {game.Name}.", "Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        try
+        {
+            lblStatus.Text = $"Launching {game.Name}...";
+            
+            // Get base paths from configuration
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string basePathRoot = string.IsNullOrWhiteSpace(appData)
+                ? AppContext.BaseDirectory
+                : appData;
+            string basePath = Path.Combine(basePathRoot, "GameBase");
+            string gemusIni = Path.Combine(basePath, "Gemus.ini");
+            
+            // Read configured paths or use defaults
+            string gamesPath = GemusIniHelper.GetIniMessage("Settings", "GamesPath", 
+                Path.Combine(basePath, "Games"), gemusIni);
+            string extractPath = Path.Combine(basePath, "Temp");
+            
+            Directory.CreateDirectory(gamesPath);
+            Directory.CreateDirectory(extractPath);
+            
+            // Build full game path
+            string gameFile = Path.Combine(gamesPath, game.Filename ?? string.Empty);
+            
+            if (!File.Exists(gameFile))
+            {
+                MessageBox.Show($"Game file not found:\n{gameFile}\n\n" +
+                    $"Please ensure game files are in:\n{gamesPath}",
+                    "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                lblStatus.Text = $"Game file not found: {game.Name}";
+                return;
+            }
+            
+            string defaultFile = string.Empty;
+            
+            // Run emulator (index 0 = first emulator in Emulators.ini)
+            await Task.Run(() => 
+            {
+                string result = _gemusEngine.RunEmulator(
+                    emuIdx: 0,
+                    gamePathFile: gameFile,
+                    imageIndex: 0,
+                    defaultFile: ref defaultFile,
+                    extractDestFolder: extractPath,
+                    fromDb: true
+                );
+                
+                if (!string.IsNullOrWhiteSpace(result))
+                {
+                    Invoke(() =>
+                    {
+                        MessageBox.Show($"Error launching game:\n{result}", "Launch Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    });
+                }
+            });
+            
+            lblStatus.Text = $"Launched {game.Name}";
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to launch game:\n{ex.Message}", "Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            lblStatus.Text = $"Failed to launch {game.Name}";
         }
     }
 
@@ -471,11 +577,80 @@ public partial class Form1 : Form
                 "To enable extra launching:\n" +
                 "1. Configure emulators and viewers in Options\n" +
                 "2. Set paths and scripts\n" +
-                "3. Ensure GEMUS.ini is configured\n\n" +
+                "3. Ensure Emulators.ini is configured\n\n" +
                 $"Extra: {extraItem.Extra.Name}\nFile: {extraItem.Extra.Filename}",
                 "Configuration Required",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
+        }
+
+        if (string.IsNullOrWhiteSpace(extraItem.Extra.Filename))
+        {
+            MessageBox.Show($"No filename specified for {extraItem.Extra.Name}.", "Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        try
+        {
+            lblStatus.Text = $"Launching {extraItem.Extra.Name}...";
+            
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string basePathRoot = string.IsNullOrWhiteSpace(appData)
+                ? AppContext.BaseDirectory
+                : appData;
+            string basePath = Path.Combine(basePathRoot, "GameBase");
+            string gemusIni = Path.Combine(basePath, "Gemus.ini");
+            
+            // Read configured paths or use defaults
+            string extrasPath = GemusIniHelper.GetIniMessage("Settings", "ExtrasPath",
+                Path.Combine(basePath, "Extras"), gemusIni);
+            string extractPath = Path.Combine(basePath, "Temp");
+            
+            Directory.CreateDirectory(extrasPath);
+            Directory.CreateDirectory(extractPath);
+            
+            string extraFile = Path.Combine(extrasPath, extraItem.Extra.Filename ?? string.Empty);
+            
+            if (!File.Exists(extraFile))
+            {
+                MessageBox.Show($"Extra file not found:\n{extraFile}\n\n" +
+                    $"Please ensure extra files are in:\n{extrasPath}",
+                    "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                lblStatus.Text = $"Extra file not found: {extraItem.Extra.Name}";
+                return;
+            }
+            
+            string defaultFile = string.Empty;
+            
+            await Task.Run(() =>
+            {
+                string result = _gemusEngine.RunEmulator(
+                    emuIdx: 0,
+                    gamePathFile: extraFile,
+                    imageIndex: 0,
+                    defaultFile: ref defaultFile,
+                    extractDestFolder: extractPath,
+                    fromDb: true
+                );
+                
+                if (!string.IsNullOrWhiteSpace(result))
+                {
+                    Invoke(() =>
+                    {
+                        MessageBox.Show($"Error launching extra:\n{result}", "Launch Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    });
+                }
+            });
+            
+            lblStatus.Text = $"Launched {extraItem.Extra.Name}";
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to launch extra:\n{ex.Message}", "Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            lblStatus.Text = $"Failed to launch {extraItem.Extra.Name}";
         }
     }
 
