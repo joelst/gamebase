@@ -28,6 +28,9 @@
     <Compile Update="GameInfoPropsForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="ImportDatabaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="QuickFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>

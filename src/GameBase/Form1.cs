@@ -670,6 +670,34 @@ public partial class Form1 : Form
         Application.Exit();
     }
 
+    private void importAccessDatabaseToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        using var importForm = new ImportDatabaseForm();
+        if (importForm.ShowDialog() == DialogResult.OK)
+        {
+            // Import successful - ask if user wants to switch to the new database
+            var result = MessageBox.Show(
+                "Database imported successfully!\n\n" +
+                "Would you like to restart GameBase and use the new SQLite database?\n\n" +
+                "(You will need to configure the database path in Options)",
+                "Import Complete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                MessageBox.Show(
+                    "Please restart GameBase and configure the database path in Options.\n\n" +
+                    $"New database location:\n{importForm.SqliteDatabasePath}",
+                    "Restart Required",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                
+                Application.Exit();
+            }
+        }
+    }
+
     private void columnsToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         if (dgvGames.Columns.Count == 0)

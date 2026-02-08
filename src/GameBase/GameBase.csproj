@@ -12,6 +12,7 @@
     <ProjectReference Include="..\Gemus\Gemus.csproj" />
     <ProjectReference Include="..\GBSql\GBSql.csproj" />
     <ProjectReference Include="..\GBFuncs\GBFuncs.csproj" />
+    <ProjectReference Include="..\GBMigrator\GBMigrator.csproj" />
   </ItemGroup>
 
 </Project>

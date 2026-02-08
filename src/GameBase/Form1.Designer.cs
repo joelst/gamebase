@@ -43,6 +43,8 @@ partial class Form1
     private ToolStripMenuItem viewToolStripMenuItem;
     private ToolStripMenuItem gameToolStripMenuItem;
     private ToolStripMenuItem helpToolStripMenuItem;
+    private ToolStripMenuItem importAccessDatabaseToolStripMenuItem;
+    private ToolStripSeparator toolStripSeparatorFile;
     private ToolStripMenuItem exitToolStripMenuItem;
     private ToolStripMenuItem playGameToolStripMenuItem;
     private ToolStripMenuItem editGameToolStripMenuItem;
@@ -73,6 +75,8 @@ partial class Form1
         components = new System.ComponentModel.Container();
         menuStrip1 = new MenuStrip();
         fileToolStripMenuItem = new ToolStripMenuItem();
+        importAccessDatabaseToolStripMenuItem = new ToolStripMenuItem();
+        toolStripSeparatorFile = new ToolStripSeparator();
         exitToolStripMenuItem = new ToolStripMenuItem();
         viewToolStripMenuItem = new ToolStripMenuItem();
         customViewsToolStripMenuItem = new ToolStripMenuItem();
@@ -139,15 +143,27 @@ partial class Form1
         //
         // fileToolStripMenuItem
         //
-        fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
+        fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importAccessDatabaseToolStripMenuItem, toolStripSeparatorFile, exitToolStripMenuItem });
         fileToolStripMenuItem.Name = "fileToolStripMenuItem";
         fileToolStripMenuItem.Size = new Size(37, 20);
         fileToolStripMenuItem.Text = "&File";
         //
+        // importAccessDatabaseToolStripMenuItem
+        //
+        importAccessDatabaseToolStripMenuItem.Name = "importAccessDatabaseToolStripMenuItem";
+        importAccessDatabaseToolStripMenuItem.Size = new Size(235, 22);
+        importAccessDatabaseToolStripMenuItem.Text = "&Import Access Database...";
+        importAccessDatabaseToolStripMenuItem.Click += importAccessDatabaseToolStripMenuItem_Click;
+        //
+        // toolStripSeparatorFile
+        //
+        toolStripSeparatorFile.Name = "toolStripSeparatorFile";
+        toolStripSeparatorFile.Size = new Size(232, 6);
+        //
         // exitToolStripMenuItem
         //
         exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-        exitToolStripMenuItem.Size = new Size(93, 22);
+        exitToolStripMenuItem.Size = new Size(235, 22);
         exitToolStripMenuItem.Text = "E&xit";
         exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
         //
