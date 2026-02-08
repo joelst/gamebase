@@ -127,7 +127,7 @@ public class SqliteRepositoryTests : IDisposable
     // Allow time for SQLite to release file locks
     GC.Collect();
     GC.WaitForPendingFinalizers();
-    
+
     // Try to delete the test database, but don't fail if it's locked
     if (File.Exists(_testDbPath))
     {

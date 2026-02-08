@@ -13,6 +13,7 @@ namespace GameBase
     {
       txtBasePath.Text = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
       txtGbName.Text = "GameBase";
+      txtDbPath.Text = Path.Combine(txtBasePath.Text, txtGbName.Text, "Data", "GameBase.db");
       cmbBackend.DataSource = Enum.GetValues(typeof(ArchiveBackend));
 
       TryLoadExisting();
@@ -28,6 +29,10 @@ namespace GameBase
           string backendValue = GemusIniHelper.GetIniMessage("Settings", "ArchiveBackend", string.Empty, gemusIni);
           if (ArchiveUnpacker.TryParseBackend(backendValue, out var backend))
             cmbBackend.SelectedItem = backend;
+
+          string dbPath = GemusIniHelper.GetIniMessage("Settings", "DatabasePath", string.Empty, gemusIni);
+          if (!string.IsNullOrWhiteSpace(dbPath))
+            txtDbPath.Text = dbPath;
         }
       }
       catch
@@ -61,7 +66,15 @@ namespace GameBase
         if (cmbBackend.SelectedItem is ArchiveBackend selected)
           backend = selected;
         GemusIniHelper.WriteIniValue("Settings", "ArchiveBackend", backend.ToString(), gemusIni);
-        MessageBox.Show(this, $"Saved backend {backend} to {gemusIni}", "Options", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        var dbPath = txtDbPath.Text.Trim();
+        if (!string.IsNullOrEmpty(dbPath))
+        {
+          Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+          GemusIniHelper.WriteIniValue("Settings", "DatabasePath", dbPath, gemusIni);
+        }
+
+        MessageBox.Show(this, $"Saved settings to {gemusIni}", "Options", MessageBoxButtons.OK, MessageBoxIcon.Information);
       }
       catch (Exception ex)
       {
@@ -73,6 +86,17 @@ namespace GameBase
     {
       DialogResult = DialogResult.Cancel;
       Close();
+    }
+
+    private void btnBrowseDb_Click(object sender, EventArgs e)
+    {
+      using var dlg = new SaveFileDialog();
+      dlg.Filter = "SQLite Database (*.db)|*.db|All files (*.*)|*.*";
+      dlg.FileName = txtDbPath.Text;
+      if (dlg.ShowDialog(this) == DialogResult.OK)
+      {
+        txtDbPath.Text = dlg.FileName;
+      }
     }
   }
 }

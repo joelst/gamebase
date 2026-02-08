@@ -28,7 +28,7 @@ public class QueryBuilderTests
     // Create a simple filter buffer array (1-based indexing from VB6)
     var filters = new string[2];
     filters[0] = string.Empty; // Index 0 unused in VB6 style
-    
+
     // Build a filter for "Name contains 'Test'"
     var filter = BuildFilterBuffer("Games", "Name", FilterOperator.Equal, FilterClauseType.FieldContainsText, "Test");
     filters[1] = filter;
@@ -56,7 +56,7 @@ public class QueryBuilderTests
 
     var filters = new string[2];
     filters[0] = string.Empty;
-    
+
     // Build a filter for file exists check
     var filter = BuildFilterBuffer("Games", "Filename", FilterOperator.Equal, FilterClauseType.FileExists, "");
     filters[1] = filter;
@@ -150,10 +150,10 @@ public class QueryBuilderTests
   /// Helper to build a filter buffer matching VB6 CVFilterFixedType structure.
   /// </summary>
   private static string BuildFilterBuffer(
-    string fieldTable, 
-    string fieldName, 
-    FilterOperator op, 
-    FilterClauseType clauseType, 
+    string fieldTable,
+    string fieldName,
+    FilterOperator op,
+    FilterClauseType clauseType,
     string clauseData)
   {
     // Format: FieldTable(128) + FieldName(128) + MusicFieldTable(128) + MusicFieldName(128) +
@@ -163,7 +163,7 @@ public class QueryBuilderTests
 
     // FieldTable at position 0
     fieldTable.AsSpan().CopyTo(buffer.AsSpan(0, Math.Min(fieldTable.Length, 128)));
-    
+
     // FieldName at position 128
     fieldName.AsSpan().CopyTo(buffer.AsSpan(128, Math.Min(fieldName.Length, 128)));
 
