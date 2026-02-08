@@ -46,6 +46,7 @@ partial class Form1
     private ToolStripMenuItem exitToolStripMenuItem;
     private ToolStripMenuItem playGameToolStripMenuItem;
     private ToolStripMenuItem editGameToolStripMenuItem;
+    private ToolStripMenuItem manageExtrasToolStripMenuItem;
     private ToolStripSeparator toolStripSeparator1;
     private ToolStripMenuItem customViewsToolStripMenuItem;
     private ToolStripMenuItem aboutToolStripMenuItem;
@@ -62,6 +63,7 @@ partial class Form1
         gameToolStripMenuItem = new ToolStripMenuItem();
         playGameToolStripMenuItem = new ToolStripMenuItem();
         editGameToolStripMenuItem = new ToolStripMenuItem();
+        manageExtrasToolStripMenuItem = new ToolStripMenuItem();
         toolStripSeparator1 = new ToolStripSeparator();
         helpToolStripMenuItem = new ToolStripMenuItem();
         aboutToolStripMenuItem = new ToolStripMenuItem();
@@ -131,7 +133,7 @@ partial class Form1
         //
         // gameToolStripMenuItem
         //
-        gameToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { playGameToolStripMenuItem, editGameToolStripMenuItem, toolStripSeparator1 });
+        gameToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { playGameToolStripMenuItem, editGameToolStripMenuItem, manageExtrasToolStripMenuItem, toolStripSeparator1 });
         gameToolStripMenuItem.Name = "gameToolStripMenuItem";
         gameToolStripMenuItem.Size = new Size(50, 20);
         gameToolStripMenuItem.Text = "&Game";
@@ -149,6 +151,13 @@ partial class Form1
         editGameToolStripMenuItem.Name = "editGameToolStripMenuItem";
         editGameToolStripMenuItem.Size = new Size(144, 22);
         editGameToolStripMenuItem.Text = "&Edit Game...";
+        //
+        // manageExtrasToolStripMenuItem
+        //
+        manageExtrasToolStripMenuItem.Name = "manageExtrasToolStripMenuItem";
+        manageExtrasToolStripMenuItem.Size = new Size(144, 22);
+        manageExtrasToolStripMenuItem.Text = "Manage &Extras...";
+        manageExtrasToolStripMenuItem.Click += manageExtrasToolStripMenuItem_Click;
         //
         // toolStripSeparator1
         //

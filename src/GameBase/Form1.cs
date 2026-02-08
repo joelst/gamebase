@@ -20,6 +20,7 @@ public partial class Form1 : Form
         InitializeComponent();
         Load += Form1_Load;
         editGameToolStripMenuItem.Click += editGameToolStripMenuItem_Click;
+        manageExtrasToolStripMenuItem.Click += manageExtrasToolStripMenuItem_Click;
     }
 
     private async void Form1_Load(object? sender, EventArgs e)
@@ -228,6 +229,23 @@ public partial class Form1 : Form
         if (game == null) return;
 
         using var dlg = new GameDetailsForm(game, _years, _publishers, _programmers, _genres);
+        dlg.ShowDialog(this);
+    }
+
+    private void manageExtrasToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (dgvGames.SelectedRows.Count == 0)
+        {
+            MessageBox.Show("Please select a game to manage extras.", "No Selection",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var selectedId = (int)dgvGames.SelectedRows[0].Cells["GA_Id"].Value;
+        var game = _filteredGames.FirstOrDefault(g => g.GA_Id == selectedId);
+        if (game == null) return;
+
+        using var dlg = new ExtrasEditorForm(_repository, game.GA_Id, game.Name);
         dlg.ShowDialog(this);
     }
 

@@ -123,6 +123,57 @@ public class GameBaseSqliteRepository : IGameBaseRepository
       new { GA_Id = gaId });
   }
 
+  public async Task<int> UpsertExtraAsync(ExtraEntity extra)
+  {
+    var conn = await _context.GetConnectionAsync();
+    using var cmd = conn.CreateCommand();
+
+    if (extra.EX_Id > 0)
+    {
+      cmd.CommandText = @"UPDATE Extras SET Name=@Name, Filename=@Filename, EX_Type=@EX_Type WHERE EX_Id=@EX_Id";
+      AddParameters(cmd, new { extra.Name, extra.Filename, extra.EX_Type, extra.EX_Id });
+      await cmd.ExecuteNonQueryAsync();
+      return extra.EX_Id;
+    }
+    else
+    {
+      cmd.CommandText = @"INSERT INTO Extras (GA_Id, Name, Filename, EX_Type) VALUES (@GA_Id, @Name, @Filename, @EX_Type); SELECT last_insert_rowid();";
+      AddParameters(cmd, new { extra.GA_Id, extra.Name, extra.Filename, extra.EX_Type });
+      var result = await cmd.ExecuteScalarAsync();
+      return Convert.ToInt32(result);
+    }
+  }
+
+  public async Task DeleteExtraAsync(int exId)
+  {
+    await _context.ExecuteNonQueryAsync("DELETE FROM Extras WHERE EX_Id = @EX_Id", new { EX_Id = exId });
+  }
+
+  public async Task SaveExtrasForGameAsync(int gaId, IEnumerable<ExtraEntity> extras)
+  {
+    var conn = await _context.GetConnectionAsync();
+    var existing = (await GetExtrasForGameAsync(gaId)).ToList();
+    var incomingList = extras.ToList();
+    var incomingIds = incomingList.Where(e => e.EX_Id > 0).Select(e => e.EX_Id).ToHashSet();
+
+    // Delete removed extras
+    foreach (var ex in existing)
+    {
+      if (!incomingIds.Contains(ex.EX_Id))
+      {
+        await DeleteExtraAsync(ex.EX_Id);
+      }
+    }
+
+    // Upsert extras
+    foreach (var extra in incomingList)
+    {
+      if (extra.GA_Id == 0) extra.GA_Id = gaId;
+      var id = await UpsertExtraAsync(extra);
+      extra.EX_Id = id;
+    }
+  }
+
   public async Task<IEnumerable<LookupEntity>> GetLookupTableAsync(string tableName)
   {
     // Validate table name to prevent SQL injection

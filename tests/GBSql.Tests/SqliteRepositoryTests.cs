@@ -85,6 +85,45 @@ public class SqliteRepositoryTests : IDisposable
   }
 
   [Fact]
+  public async Task UpsertExtraAsync_InsertsAndUpdates()
+  {
+    var extra = new ExtraEntity { GA_Id = 1, Name = "Map", Filename = "map.txt", EX_Type = 1 };
+    var id = await _repository.UpsertExtraAsync(extra);
+    Assert.True(id > 0);
+
+    var extras = (await _repository.GetExtrasForGameAsync(1)).ToList();
+    Assert.Contains(extras, e => e.Name == "Map" && e.Filename == "map.txt");
+
+    extra.EX_Id = id;
+    extra.Name = "Map v2";
+    await _repository.UpsertExtraAsync(extra);
+
+    extras = (await _repository.GetExtrasForGameAsync(1)).ToList();
+    Assert.Contains(extras, e => e.EX_Id == id && e.Name == "Map v2");
+  }
+
+  [Fact]
+  public async Task SaveExtrasForGameAsync_ReplacesExtras()
+  {
+    var extras = (await _repository.GetExtrasForGameAsync(1)).ToList();
+    Assert.Single(extras);
+    var existing = extras.First();
+
+    var newList = new List<ExtraEntity>
+    {
+      new ExtraEntity { EX_Id = existing.EX_Id, GA_Id = 1, Name = "Manual", Filename = existing.Filename, EX_Type = existing.EX_Type },
+      new ExtraEntity { GA_Id = 1, Name = "Reference", Filename = "ref.pdf", EX_Type = 1 }
+    };
+
+    await _repository.SaveExtrasForGameAsync(1, newList);
+
+    var saved = (await _repository.GetExtrasForGameAsync(1)).ToList();
+    Assert.Equal(2, saved.Count);
+    Assert.Contains(saved, e => e.Name == "Manual");
+    Assert.Contains(saved, e => e.Name == "Reference");
+  }
+
+  [Fact]
   public async Task GetLookupTableAsync_ReturnsPublishers()
   {
     // Act

@@ -49,6 +49,21 @@ public interface IGameBaseRepository : IDisposable
   Task<IEnumerable<ExtraEntity>> GetExtrasForGameAsync(int gaId);
 
   /// <summary>
+  /// Inserts or updates an extra. Returns the resulting EX_Id.
+  /// </summary>
+  Task<int> UpsertExtraAsync(ExtraEntity extra);
+
+  /// <summary>
+  /// Deletes an extra by EX_Id.
+  /// </summary>
+  Task DeleteExtraAsync(int exId);
+
+  /// <summary>
+  /// Replaces all extras for a game with the provided list.
+  /// </summary>
+  Task SaveExtrasForGameAsync(int gaId, IEnumerable<ExtraEntity> extras);
+
+  /// <summary>
   /// Gets a lookup table by name (Publishers, Years, etc.).
   /// </summary>
   Task<IEnumerable<LookupEntity>> GetLookupTableAsync(string tableName);
